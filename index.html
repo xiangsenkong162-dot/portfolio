@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>孔祥森 · 新媒体运营作品集</title>
+  <meta name="description" content="孔祥森，新媒体运营 / 短视频运营。大学接单剪辑、禄云账号运营、三维制作实习与企业个人 IP 运营作品集。">
+  <style>
+    :root {
+      --ink: #171c1b;
+      --text: #454b49;
+      --muted: #757c79;
+      --line: rgba(23, 28, 27, 0.13);
+      --accent: #5f746c;
+      --accent-deep: #40554e;
+      --accent-soft: #dbe5e0;
+      --dark: #101514;
+      --light-text: #f2f4f1;
+      --light-muted: #b8c5bf;
+      --gallery-surface: rgba(255, 255, 255, 0.06);
+      --gallery-line: rgba(255, 255, 255, 0.14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      background:
+        linear-gradient(135deg, #46534d 0%, #7c8780 48%, #35423d 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img, video { display: block; max-width: 100%; }
+    .wrap { width: min(1120px, calc(100% - 44px)); margin-inline: auto; }
+
+    .scroll-progress {
+      position: fixed;
+      top: 62px;
+      left: 0;
+      z-index: 62;
+      width: 0;
+      height: 2px;
+      background: #c9b98f;
+      transition: background-color 0.45s ease;
+    }
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      background: linear-gradient(90deg, rgba(39, 48, 44, 0.9), rgba(97, 108, 101, 0.68));
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .nav-inner {
+      width: min(1120px, calc(100% - 44px));
+      height: 62px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--light-text);
+    }
+    .nav .brand { display: flex; align-items: baseline; gap: 10px; }
+    .nav .brand-name {
+      color: #f6f5ef;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .nav .brand-sub {
+      color: #c4d0ca;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 25px; }
+    .nav-links a { font-size: 13.5px; color: #e1e7e2; }
+    .nav-links a:hover { color: #fff; }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      color: var(--light-text);
+    }
+    .hero .bg, .hero .veil { position: absolute; inset: 0; }
+    .hero .bg video { width: 100%; height: 100%; object-fit: cover; }
+    .hero .veil {
+      background:
+        linear-gradient(180deg, rgba(27, 35, 31, 0.58) 0%, rgba(57, 68, 62, 0.28) 50%, rgba(24, 31, 28, 0.84) 100%),
+        linear-gradient(90deg, rgba(27, 35, 31, 0.58) 0%, rgba(121, 132, 124, 0.14) 55%, rgba(39, 47, 43, 0.32) 100%);
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, calc(100% - 44px));
+      margin-inline: auto;
+      padding: 116px 0 88px;
+    }
+    .hero h1 {
+      color: #f6f5ef;
+      font-size: 62px;
+      font-weight: 800;
+      line-height: 1.02;
+    }
+    .target {
+      margin-top: 11px;
+      color: #d2ddd7;
+      font-size: 14.5px;
+      font-weight: 700;
+    }
+    .hero-meta, .hero-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 18px;
+      margin-top: 5px;
+      color: #b8c4be;
+      font-size: 12.5px;
+    }
+    .hero-contact { margin-top: 2px; }
+    .hero-meta span, .hero-contact span { white-space: nowrap; }
+
+    .hero-exp {
+      position: relative;
+      display: grid;
+      gap: 9px;
+      max-width: 920px;
+      margin-top: 20px;
+      padding-left: 18px;
+    }
+    .hero-exp::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: rgba(225, 232, 227, 0.22);
+    }
+    .exp-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 128px minmax(0, 1fr);
+      gap: 14px;
+      padding: 12px 15px;
+      background: linear-gradient(135deg, rgba(45, 55, 50, 0.64), rgba(25, 32, 29, 0.52));
+      border: 1px solid rgba(235, 240, 236, 0.17);
+      border-radius: 7px;
+      backdrop-filter: blur(14px);
+    }
+    .exp-card::before {
+      content: "";
+      position: absolute;
+      left: -22px;
+      top: 19px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #c9b98f;
+      box-shadow: 0 0 0 3px rgba(17, 22, 21, 0.72);
+    }
+    .exp-date {
+      padding-top: 2px;
+      color: #c9b98f;
+      font-size: 11.5px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    .exp-title {
+      color: #f3f4ef;
+      font-size: 14.5px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    .exp-company {
+      margin-top: 1px;
+      color: #b8c4be;
+      font-size: 12px;
+    }
+    .exp-text {
+      margin-top: 5px;
+      color: #dee4e0;
+      font-size: 12.3px;
+      line-height: 1.6;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 19px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn svg { width: 17px; height: 17px; flex: none; }
+    .btn.primary {
+      color: #fff;
+      background: rgba(170, 95, 72, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+    }
+    .btn.primary:hover { background: rgba(181, 106, 81, 0.92); }
+    .btn.ghost {
+      color: #f3f5f2;
+      background: linear-gradient(135deg, rgba(45, 55, 50, 0.64), rgba(25, 32, 29, 0.52));
+      border: 1px solid rgba(235, 240, 236, 0.17);
+      backdrop-filter: blur(14px);
+    }
+    .btn.ghost:hover { background: linear-gradient(135deg, rgba(56, 67, 61, 0.72), rgba(31, 39, 35, 0.6)); }
+    .scroll-cue {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      z-index: 2;
+      transform: translateX(-50%);
+      color: #e6ebe8;
+      opacity: 0.8;
+    }
+    .scroll-cue svg { width: 21px; height: 21px; animation: bob 2s ease-in-out infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+    .gallery {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding: 92px 0;
+      overflow: hidden;
+      color: #e9efeb;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .gallery--works {
+      --tone: #c9b98f;
+      background: linear-gradient(135deg, rgba(36, 47, 42, 0.94) 0%, rgba(82, 96, 88, 0.7) 58%, rgba(57, 70, 64, 0.82) 100%);
+    }
+    .gallery--three {
+      --tone: #d2c5ad;
+      background: linear-gradient(135deg, rgba(57, 60, 55, 0.88) 0%, rgba(103, 105, 94, 0.64) 58%, rgba(121, 115, 102, 0.56) 100%);
+    }
+    .gallery--cases {
+      --tone: #c78e79;
+      background: linear-gradient(135deg, rgba(38, 44, 41, 0.94) 0%, rgba(91, 83, 78, 0.62) 58%, rgba(62, 68, 63, 0.84) 100%);
+    }
+    .gallery .section-head { max-width: 760px; margin-bottom: 32px; }
+    .gallery .kicker { color: var(--tone); }
+    .gallery .section-head h2 { color: #f3f5f2; }
+    .gallery .section-head .lead { color: #aebbb5; }
+    .gallery .subhead h3 { color: #f1f4f1; }
+    .gallery .subhead span { color: #96a39d; }
+    .section-head h2 {
+      margin-top: 7px;
+      font-size: 35px;
+      font-weight: 800;
+      line-height: 1.22;
+    }
+    .section-head .lead { margin-top: 9px; font-size: 14.5px; }
+    .subhead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 30px 0 15px;
+    }
+    .subhead h3 { font-size: 18px; font-weight: 800; }
+    .subhead span { font-size: 12.5px; }
+
+    .gallery .video-card {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--gallery-surface);
+      border: 1px solid var(--gallery-line);
+      border-radius: 8px;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .video-grid.two-up { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .video-card .frame { aspect-ratio: 16 / 9; background: #161c19; }
+    .video-card video { width: 100%; height: 100%; object-fit: contain; background: #161c19; }
+    .video-card .cap { padding: 13px 15px 15px; }
+    .video-card .t { color: #f0f3f0; font-size: 14.5px; font-weight: 800; }
+    .video-card .m {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      color: #9eaaa4;
+      font-size: 12.5px;
+    }
+    .video-card .m .dot { width: 3px; height: 3px; border-radius: 50%; background: #83918a; }
+
+    .data-panel {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 24px;
+      align-items: stretch;
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(20, 27, 24, 0.58), rgba(255, 255, 255, 0.035));
+      border: 1px solid var(--gallery-line);
+      border-radius: 8px;
+    }
+    .data-copy h3 { color: #f2f4f1; font-size: 24px; font-weight: 800; }
+    .data-copy p {
+      margin-top: 8px;
+      color: #acb9b3;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .data-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-top: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .data-stat { padding: 13px 14px; background: rgba(255, 255, 255, 0.035); }
+    .data-stat b { display: block; color: #f2f4f1; font-size: 21px; font-weight: 800; line-height: 1.15; }
+    .data-stat span { display: block; margin-top: 3px; color: #94a49d; font-size: 11.5px; }
+    .data-shots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .data-shot {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      background: #1c231f;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+    }
+    .data-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.35s ease;
+    }
+    .data-shot:hover img { transform: scale(1.015); }
+    .data-shot .label {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      padding: 3px 8px;
+      color: #eef2ef;
+      background: rgba(17, 21, 20, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+    .feature-grid .video-card { height: 100%; }
+    .feature-note {
+      padding: 26px;
+      background: var(--gallery-surface);
+      border: 1px solid var(--gallery-line);
+      border-radius: 8px;
+    }
+    .feature-note .tag { color: var(--tone); font-size: 12.5px; font-weight: 800; }
+    .feature-note h3 { margin-top: 5px; color: #f1f4f1; font-size: 24px; font-weight: 800; }
+    .feature-note p { margin-top: 8px; color: #b8c3bd; font-size: 14px; }
+    .feature-list { margin-top: 18px; }
+    .feature-list li {
+      position: relative;
+      padding: 7px 0 7px 16px;
+      color: #b8c3bd;
+      font-size: 13.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .feature-list li:last-child { border-bottom: 0; }
+    .feature-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 15px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--tone);
+    }
+
+    .account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .account {
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      backdrop-filter: blur(16px);
+    }
+    .account-head .nm { color: #f0f3f0; font-size: 17px; font-weight: 800; line-height: 1.35; }
+    .account-head .id { margin-top: 3px; color: #9faea7; font-size: 12.5px; }
+    .account-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      padding: 11px 0;
+      border-top: 1px solid rgba(232, 240, 236, 0.12);
+      border-bottom: 1px solid rgba(232, 240, 236, 0.12);
+      color: #b9c6c0;
+      font-size: 12.5px;
+    }
+    .account-stats b { color: #f0f3f0; font-size: 14px; font-weight: 800; }
+    .vlinks { display: flex; flex-direction: column; gap: 8px; }
+    .vlink {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 10px 12px;
+      color: #d8e0dc;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(232, 240, 236, 0.12);
+      border-radius: 5px;
+      font-size: 13px;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .vlink:hover { background: rgba(255, 255, 255, 0.055); border-color: rgba(197, 217, 208, 0.32); }
+    .vlink .play { flex: none; width: 14px; height: 14px; margin-top: 3px; color: #c9b98f; }
+    .vlink .txt { flex: 1; min-width: 0; line-height: 1.55; }
+    .vlink .ext { flex: none; width: 13px; height: 13px; margin-top: 3px; color: #85938d; }
+
+    .auto-toggle {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 70;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: #f3f5f2;
+      background: rgba(71, 81, 76, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+    .auto-toggle:hover { background: rgba(17, 22, 21, 0.88); }
+    .auto-toggle:focus-visible { outline: 2px solid #b8cbc2; outline-offset: 3px; }
+    .auto-toggle svg { width: 18px; height: 18px; }
+    .auto-toggle .play-icon { display: none; }
+    .auto-toggle.is-paused .pause-icon { display: none; }
+    .auto-toggle.is-paused .play-icon { display: block; }
+
+    @media screen and (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero-inner { padding: 92px 0 64px; }
+      .hero h1 { font-size: 50px; }
+      .video-grid { grid-template-columns: 1fr 1fr; }
+      .video-grid > :last-child { grid-column: 1 / -1; }
+      .data-panel { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .gallery { padding: 72px 0; }
+    }
+
+    @media screen and (max-width: 620px) {
+      .wrap, .nav-inner, .hero-inner { width: calc(100% - 36px); }
+      .hero-inner { padding: 86px 0 58px; }
+      .hero h1 { font-size: 42px; }
+      .target { font-size: 13.5px; }
+      .hero-meta, .hero-contact { display: grid; gap: 1px; font-size: 12px; }
+      .hero-meta span, .hero-contact span { white-space: normal; }
+      .hero-exp { gap: 8px; margin-top: 17px; padding-left: 15px; }
+      .exp-card { grid-template-columns: 1fr; gap: 2px; padding: 11px 13px; }
+      .exp-date { padding-top: 0; font-size: 11px; }
+      .exp-title { font-size: 14px; }
+      .exp-text { font-size: 12px; }
+      .hero-cta { margin-top: 18px; }
+      .section-head h2 { font-size: 29px; }
+      .section-head .lead { font-size: 13.5px; }
+      .video-grid, .account-grid { grid-template-columns: 1fr; }
+      .video-grid.two-up { grid-template-columns: 1fr; }
+      .video-grid > :last-child { grid-column: auto; }
+      .data-panel { padding: 14px; gap: 17px; }
+      .data-shots { gap: 8px; }
+      .subhead { margin-top: 25px; }
+      .account { padding: 20px; }
+      .feature-note { padding: 21px; }
+      .gallery { padding: 58px 0; }
+      .auto-toggle { right: 14px; bottom: 14px; width: 42px; height: 42px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .scroll-cue svg { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="Xiangsen Kong Portfolio">
+        <span class="brand-name">XIANGSEN KONG</span>
+        <span class="brand-sub">Portfolio</span>
+      </a>
+      <div class="nav-links">
+        <a href="#works">大学阶段</a>
+        <a href="#three-d">三维实习</a>
+        <a href="#cases">IP 运营</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="bg">
+      <video autoplay muted loop playsinline poster="assets/poster_v1.jpg">
+        <source src="videos/v1.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="veil"></div>
+    <div class="hero-inner">
+      <h1>孔祥森</h1>
+      <p class="target">求职意向：新媒体运营 / 短视频运营</p>
+      <div class="hero-meta">
+        <span>24 岁</span>
+        <span>江苏徐州</span>
+        <span>现居上海</span>
+        <span>期望薪资 7K</span>
+      </div>
+      <div class="hero-contact">
+        <span>微信 zx19851617123</span>
+        <span>邮箱 2085467835@qq.com</span>
+        <span>手机 19816448318</span>
+      </div>
+
+      <div class="hero-exp">
+        <article class="exp-card">
+          <div class="exp-date">2021.09 至 2025.06</div>
+          <div class="exp-body">
+            <div class="exp-title">教育经历</div>
+            <div class="exp-company">无锡太湖学院 · 数字媒体艺术（本科）</div>
+            <p class="exp-text">主修设计思维、视觉设计基础、数字图像表现、数字雕刻与建模、动画运动规律、角色设计与制作、三维角色动画等课程。</p>
+          </div>
+        </article>
+        <article class="exp-card">
+          <div class="exp-date">2021.09 至 2025.06</div>
+          <div class="exp-body">
+            <div class="exp-title">校园自媒体创业</div>
+            <div class="exp-company">「禄云^」影视二创账号 · 负责快手侧剪辑</div>
+            <p class="exp-text">全平台累计近 3 万粉丝，快手单条最高播放 300 万、单视频最高点赞 30 万，累计点赞 100 万；2024 年获快手「优质创作者」。</p>
+          </div>
+        </article>
+        <article class="exp-card">
+          <div class="exp-date">2024.11 至 2025.01</div>
+          <div class="exp-body">
+            <div class="exp-title">三维制作实习</div>
+            <div class="exp-company">无锡昱境信息科技有限公司</div>
+            <p class="exp-text">负责「台湾省林口区」路牌、红绿灯、建筑等三维模型的全流程制作。</p>
+          </div>
+        </article>
+        <article class="exp-card">
+          <div class="exp-date">2025.09 至 2026.04</div>
+          <div class="exp-body">
+            <div class="exp-title">自媒体运营</div>
+            <div class="exp-company">上海瑞墁建筑装饰设计有限公司</div>
+            <p class="exp-text">医生 IP 从 0 到 1：4.6 万粉丝、22.1 万累计点赞、单条最高点赞 9.9 万；设计师 IP：2.6 万粉丝、13 万累计点赞。负责拍摄、剪辑、账号运营及新人培训。</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn primary" href="#works">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+          看作品
+        </a>
+        <a class="btn ghost" href="孔祥森-运营简历.pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          简历 PDF
+        </a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#works" aria-label="向下浏览">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
+    </a>
+  </header>
+
+  <section class="gallery gallery--works" id="works" data-tone="#c9b98f">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">2021.09 至 2025.06</div>
+        <h2>大学阶段 · 内容作品与账号数据</h2>
+        <p class="lead">大学期间的接单剪辑作品、禄云账号截图和账号数据。</p>
+      </div>
+
+      <div class="subhead">
+        <h3>接单剪辑作品</h3>
+        <span>3 支视频</span>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="frame">
+            <video controls preload="metadata" poster="assets/poster_v1.jpg">
+              <source src="videos/v1.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="cap">
+            <div class="t">大学剪辑作品 01</div>
+            <div class="m"><span>00:30</span><span class="dot"></span><span>1280 × 720</span></div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="frame">
+            <video controls preload="metadata" poster="assets/poster_v2.jpg">
+              <source src="videos/v2.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="cap">
+            <div class="t">大学剪辑作品 02</div>
+            <div class="m"><span>02:44</span><span class="dot"></span><span>960 × 544</span></div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="frame">
+            <video controls preload="metadata" poster="assets/poster_v3.jpg">
+              <source src="videos/v3.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="cap">
+            <div class="t">大学剪辑作品 03</div>
+            <div class="m"><span>00:53</span><span class="dot"></span><span>1280 × 720</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subhead">
+        <h3>禄云账号作品</h3>
+        <span>2 支视频</span>
+      </div>
+      <div class="video-grid two-up">
+        <div class="video-card">
+          <div class="frame">
+            <video controls preload="metadata" poster="assets/poster_d1.jpg">
+              <source src="videos/d1.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="cap">
+            <div class="t">禄云账号作品 D1</div>
+            <div class="m"><span>02:34</span><span class="dot"></span><span>720 × 544</span></div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="frame">
+            <video controls preload="metadata" poster="assets/poster_d2.jpg">
+              <source src="videos/d2.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="cap">
+            <div class="t">禄云账号作品 D2</div>
+            <div class="m"><span>05:55</span><span class="dot"></span><span>720 × 544</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subhead">
+        <h3>禄云账号 · 数据截图</h3>
+        <span>账号累计数据</span>
+      </div>
+      <div class="data-panel">
+        <div class="data-copy">
+          <h3>禄云账号数据</h3>
+          <div class="data-stats">
+            <div class="data-stat"><b>近 3 万</b><span>全平台粉丝</span></div>
+            <div class="data-stat"><b>300 万</b><span>单条最高播放</span></div>
+            <div class="data-stat"><b>30 万</b><span>单条最高点赞</span></div>
+            <div class="data-stat"><b>100 万</b><span>累计点赞</span></div>
+          </div>
+          <p>大学期间负责「禄云^」快手侧视频剪辑，账号内容以影视二创为主，2024 年获快手「优质创作者」。</p>
+        </div>
+        <div class="data-shots">
+          <a class="data-shot" href="images/luyun-a1.jpg" target="_blank" rel="noopener" aria-label="查看禄云账号截图 A1">
+            <img src="images/luyun-a1.jpg" alt="禄云账号截图 A1">
+            <span class="label">截图 01</span>
+          </a>
+          <a class="data-shot" href="images/luyun-a2.jpg" target="_blank" rel="noopener" aria-label="查看禄云账号截图 A2">
+            <img src="images/luyun-a2.jpg" alt="禄云账号截图 A2">
+            <span class="label">截图 02</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery gallery--three" id="three-d" data-tone="#d2c5ad">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">2024.11 至 2025.01</div>
+        <h2>三维制作实习</h2>
+        <p class="lead">在无锡昱境信息科技有限公司参与项目制作，负责三维模型的全流程制作。</p>
+      </div>
+      <div class="feature-grid">
+        <div class="video-card">
+          <div class="frame">
+            <video controls preload="metadata" poster="assets/poster_b1.jpg">
+              <source src="videos/b1.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="cap">
+            <div class="t">三维项目短片 · B1</div>
+            <div class="m"><span>00:05</span><span class="dot"></span><span>1280 × 720</span></div>
+          </div>
+        </div>
+        <div class="feature-note">
+          <div class="tag">项目内容</div>
+          <h3>台湾省林口区</h3>
+          <p>参与路牌、红绿灯、建筑等三维模型的全流程制作，配合项目完成场景资产搭建。</p>
+          <ul class="feature-list">
+            <li>路牌与道路标识模型</li>
+            <li>红绿灯与街道设施模型</li>
+            <li>建筑场景资产制作</li>
+            <li>建模、材质与输出全流程</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery gallery--cases" id="cases" data-tone="#c78e79">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">2025.09 至 2026.04</div>
+        <h2>个人 IP 账号运营</h2>
+        <p class="lead">在上海瑞墁建筑装饰设计有限公司期间，负责医生 IP 从 0 到 1 的账号运营，并承担设计师 IP 的视频拍摄、剪辑与日常运营。</p>
+      </div>
+      <div class="account-grid">
+        <article class="account">
+          <div class="account-head">
+            <div class="nm">上海胰腺肿瘤专家刘文生</div>
+            <div class="id">抖音号 18121299241A</div>
+          </div>
+          <div class="account-stats">
+            <span>粉丝 <b>4.6 万</b></span>
+            <span>累计点赞 <b>22.1 万</b></span>
+            <span>单条最高点赞 <b>9.9 万</b></span>
+          </div>
+          <div class="vlinks">
+            <a class="vlink" href="https://v.douyin.com/0p88chACzho/" target="_blank" rel="noopener">
+              <svg class="play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+              <span class="txt"># 上海复旦肿瘤医院专家 # 上海胰腺癌专家</span>
+              <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+            </a>
+            <a class="vlink" href="https://v.douyin.com/ShtbTimeHIY/" target="_blank" rel="noopener">
+              <svg class="play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+              <span class="txt">胰腺癌让人闻风丧胆，能治愈吗？答案是可以！</span>
+              <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="account">
+          <div class="account-head">
+            <div class="nm">中国企业总部设计师.简妮</div>
+            <div class="id">抖音号 sh56666611</div>
+          </div>
+          <div class="account-stats">
+            <span>粉丝 <b>2.6 万</b></span>
+            <span>累计点赞 <b>13 万</b></span>
+          </div>
+          <div class="vlinks">
+            <a class="vlink" href="https://v.douyin.com/hQF1nDI92vU/" target="_blank" rel="noopener">
+              <svg class="play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+              <span class="txt"># 董事长办公室设计 董事长办公室的 3 个隐藏设计细节</span>
+              <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+            </a>
+            <a class="vlink" href="https://v.douyin.com/NN3uqukYALE/" target="_blank" rel="noopener">
+              <svg class="play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+              <span class="txt"># 大堂设计 「去前台化」已成趋势，80% 企业总部...</span>
+              <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <button class="auto-toggle" id="auto-toggle" type="button" aria-label="暂停自动滚动" title="暂停自动滚动">
+    <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14"/><path d="M16 5v14"/></svg>
+    <svg class="play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+
+  <script>
+    (() => {
+      const toggle = document.getElementById('auto-toggle');
+      const progress = document.querySelector('.scroll-progress');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let auto = !reduceMotion.matches;
+      let lastTime = performance.now();
+      let scrollTarget = window.scrollY;
+
+      const maxScroll = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+      function setAuto(on) {
+        auto = on && !reduceMotion.matches;
+        scrollTarget = window.scrollY;
+        document.documentElement.style.scrollBehavior = auto ? 'auto' : '';
+        toggle.classList.toggle('is-paused', !auto);
+        const label = auto ? '暂停自动滚动' : '继续自动滚动';
+        toggle.setAttribute('aria-label', label);
+        toggle.title = label;
+      }
+
+      function updateProgress() {
+        const max = maxScroll();
+        const ratio = max > 0 ? window.scrollY / max : 0;
+        progress.style.width = `${Math.min(100, Math.max(0, ratio * 100))}%`;
+      }
+
+      function tick(now) {
+        const delta = Math.min(now - lastTime, 48);
+        lastTime = now;
+        if (auto && !document.hidden) {
+          const max = maxScroll();
+          if (window.scrollY >= max - 1) {
+            setAuto(false);
+          } else {
+            scrollTarget = Math.max(scrollTarget, window.scrollY);
+            scrollTarget = Math.min(max, scrollTarget + delta * 0.032);
+            window.scrollTo(0, scrollTarget);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      toggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        if (!auto && window.scrollY >= maxScroll() - 2) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.setTimeout(() => setAuto(true), 500);
+          return;
+        }
+        setAuto(!auto);
+      });
+
+      ['wheel', 'touchstart', 'pointerdown'].forEach((type) => {
+        window.addEventListener(type, (event) => {
+          if (event.target.closest('.auto-toggle')) return;
+          if (auto) setAuto(false);
+        }, { passive: true });
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
+          setAuto(false);
+        }
+      });
+
+      document.querySelectorAll('.video-card video').forEach((video) => {
+        video.addEventListener('play', () => setAuto(false));
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.dataset.tone) {
+            progress.style.backgroundColor = entry.target.dataset.tone;
+          }
+        });
+      }, { threshold: 0.35 });
+      document.querySelectorAll('.gallery').forEach((section) => observer.observe(section));
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+      reduceMotion.addEventListener?.('change', (event) => {
+        if (event.matches) setAuto(false);
+      });
+
+      setAuto(auto);
+      updateProgress();
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
