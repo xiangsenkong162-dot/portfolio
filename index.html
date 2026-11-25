@@ -509,6 +509,76 @@
       html { scroll-behavior: auto; }
       .scroll-cue svg { animation: none; }
     }
+
+    @font-face {
+      font-family: "Noto Sans SC Local";
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("assets/fonts/noto-400.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Noto Sans SC Local";
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url("assets/fonts/noto-500.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Noto Sans SC Local";
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url("assets/fonts/noto-600.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Noto Sans SC Local";
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url("assets/fonts/noto-700.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Noto Sans SC Local";
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
+      src: url("assets/fonts/noto-800.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Noto Sans SC Local";
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url("assets/fonts/noto-900.ttf") format("truetype");
+    }
+
+    .variable-proximity { white-space: nowrap; }
+    .variable-proximity .proximity-visual { display: inline; }
+    .variable-proximity .proximity-letter {
+      display: inline-block;
+      transform-origin: 50% 80%;
+      backface-visibility: hidden;
+      will-change: transform, color, font-weight;
+    }
+    .hero h1.variable-proximity {
+      font-family: "Noto Sans SC Local", "Microsoft YaHei", sans-serif;
+      font-weight: 500;
+    }
+    .nav .brand-name.variable-proximity {
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   </style>
 </head>
 <body>
@@ -516,7 +586,19 @@
   <nav class="nav">
     <div class="nav-inner">
       <a class="brand" href="#top" aria-label="Xiangsen Kong Portfolio">
-        <span class="brand-name">XIANGSEN KONG</span>
+        <span
+          class="brand-name variable-proximity"
+          data-proximity
+          data-radius="92"
+          data-falloff="gaussian"
+          data-from-weight="700"
+          data-to-weight="700"
+          data-from-color="#f6f5ef"
+          data-to-color="#c9b98f"
+          data-scale="1.015"
+          data-lift="0.006"
+          data-smoothing="0.16"
+        >XIANGSEN KONG</span>
         <span class="brand-sub">Portfolio</span>
       </a>
       <div class="nav-links">
@@ -535,7 +617,19 @@
     </div>
     <div class="veil"></div>
     <div class="hero-inner">
-      <h1>孔祥森</h1>
+      <h1
+        class="variable-proximity"
+        data-proximity
+        data-radius="170"
+        data-falloff="gaussian"
+        data-from-weight="500"
+        data-to-weight="900"
+        data-from-color="#f6f5ef"
+        data-to-color="#e6c98f"
+        data-scale="1.04"
+        data-lift="0.03"
+        data-smoothing="0.18"
+      >孔祥森</h1>
       <p class="target">求职意向：新媒体运营 / 短视频运营</p>
       <div class="hero-meta">
         <span>24 岁</span>
@@ -891,6 +985,171 @@
       setAuto(auto);
       updateProgress();
       requestAnimationFrame(tick);
+    })();
+  </script>
+  <script>
+    (() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (reduceMotion.matches) return;
+
+      const nodes = Array.from(document.querySelectorAll('[data-proximity]'));
+      if (!nodes.length) return;
+
+      const parseColor = (value) => {
+        const hex = String(value || '#f6f5ef').replace('#', '');
+        if (hex.length !== 6) return [246, 245, 239];
+        return [0, 2, 4].map((index) => parseInt(hex.slice(index, index + 2), 16));
+      };
+      const mixColor = (from, to, amount) =>
+        `rgb(${from.map((channel, index) => Math.round(channel + (to[index] - channel) * amount)).join(', ')})`;
+      const strengthAt = (distance, radius, falloff) => {
+        if (distance >= radius) return 0;
+        const normalized = 1 - distance / radius;
+        if (falloff === 'exponential') return normalized * normalized;
+        if (falloff === 'gaussian') {
+          const edge = Math.exp(-2);
+          return (Math.exp(-2 * (distance / radius) ** 2) - edge) / (1 - edge);
+        }
+        return normalized;
+      };
+
+      const pointer = { x: 0, y: 0, active: false };
+      const states = nodes.map((element) => {
+        const text = element.textContent.trim();
+        const fromColor = parseColor(element.dataset.fromColor);
+        const toColor = parseColor(element.dataset.toColor);
+        const fromWeight = Number(element.dataset.fromWeight || 500);
+        const toWeight = Number(element.dataset.toWeight || 900);
+        const scale = Number(element.dataset.scale || 1);
+        const lift = Number(element.dataset.lift || 0);
+
+        element.textContent = '';
+        element.setAttribute('aria-label', text);
+        const sr = document.createElement('span');
+        sr.className = 'sr-only';
+        sr.textContent = text;
+        const visual = document.createElement('span');
+        visual.className = 'proximity-visual';
+        visual.setAttribute('aria-hidden', 'true');
+        const letters = Array.from(text).map((character) => {
+          const letter = document.createElement('span');
+          letter.className = 'proximity-letter';
+          letter.textContent = character === ' ' ? '\u00a0' : character;
+          letter.style.fontWeight = String(Math.round(fromWeight));
+          letter.style.color = mixColor(fromColor, toColor, 0);
+          visual.appendChild(letter);
+          return {
+            el: letter,
+            level: 0,
+            lastWeight: Math.round(fromWeight),
+            lastColor: mixColor(fromColor, toColor, 0),
+            lastTransform: ''
+          };
+        });
+        element.append(sr, visual);
+
+        return {
+          element,
+          letters,
+          radius: Number(element.dataset.radius || 150),
+          falloff: element.dataset.falloff || 'linear',
+          smoothing: Number(element.dataset.smoothing || 0.2),
+          fromWeight,
+          toWeight,
+          fromColor,
+          toColor,
+          scale,
+          lift
+        };
+      });
+
+      let frameId = 0;
+      let lastTime = 0;
+
+      const start = () => {
+        if (frameId) return;
+        lastTime = performance.now();
+        frameId = requestAnimationFrame(animate);
+      };
+
+      function animate(now) {
+        frameId = 0;
+        const delta = lastTime ? Math.min(now - lastTime, 64) : 16;
+        lastTime = now;
+        let active = false;
+
+        states.forEach((state) => {
+          const area = state.element.getBoundingClientRect();
+          const outside =
+            !pointer.active ||
+            pointer.x < area.left - state.radius ||
+            pointer.x > area.right + state.radius ||
+            pointer.y < area.top - state.radius ||
+            pointer.y > area.bottom + state.radius;
+          const ease = 1 - Math.exp(-delta / (state.smoothing * 400));
+
+          state.letters.forEach((letter) => {
+            let target = 0;
+            if (!outside) {
+              const rect = letter.el.getBoundingClientRect();
+              const distance = Math.hypot(
+                pointer.x - (rect.left + rect.width / 2),
+                pointer.y - (rect.top + rect.height / 2)
+              );
+              target = strengthAt(distance, state.radius, state.falloff);
+            }
+            const previous = letter.level;
+            let next = previous + (target - previous) * ease;
+            if (Math.abs(target - next) < 0.002) next = target;
+            letter.level = next;
+            if (next > 0 || previous > 0) active = true;
+
+            const weight = Math.round(state.fromWeight + (state.toWeight - state.fromWeight) * next);
+            if (weight !== letter.lastWeight) {
+              letter.lastWeight = weight;
+              letter.el.style.fontWeight = String(weight);
+            }
+            const color = mixColor(state.fromColor, state.toColor, next);
+            if (color !== letter.lastColor) {
+              letter.lastColor = color;
+              letter.el.style.color = color;
+            }
+            const transform = `translateY(${(-state.lift * next).toFixed(3)}em) scale(${(1 + (state.scale - 1) * next).toFixed(3)})`;
+            if (transform !== letter.lastTransform) {
+              letter.lastTransform = transform;
+              letter.el.style.transform = transform;
+            }
+          });
+        });
+
+        if (active || pointer.active) start();
+      }
+
+      const setPointer = (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.active = true;
+        start();
+      };
+      const clearPointer = () => {
+        pointer.active = false;
+        start();
+      };
+
+      window.addEventListener('pointermove', setPointer, { passive: true });
+      window.addEventListener('mousemove', setPointer, { passive: true });
+      window.addEventListener('touchmove', (event) => {
+        const touch = event.touches[0];
+        if (touch) setPointer({ clientX: touch.clientX, clientY: touch.clientY });
+      }, { passive: true });
+      window.addEventListener('pointerleave', clearPointer);
+      window.addEventListener('mouseleave', clearPointer);
+      window.addEventListener('touchend', clearPointer, { passive: true });
+      window.addEventListener('touchcancel', clearPointer, { passive: true });
+      window.addEventListener('scroll', () => {
+        if (pointer.active) start();
+      }, { passive: true });
+      document.fonts?.ready.then(start);
     })();
   </script>
 </body>
