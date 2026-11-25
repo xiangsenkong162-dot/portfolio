@@ -18,7 +18,7 @@
       --dark: #101514;
       --light-text: #f2f4f1;
       --light-muted: #b8c5bf;
-      --gallery-surface: rgba(255, 255, 255, 0.06);
+      --gallery-surface: rgba(0, 0, 0, 0.36);
       --gallery-line: rgba(255, 255, 255, 0.14);
     }
 
@@ -26,7 +26,7 @@
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
       background:
-        linear-gradient(135deg, #46534d 0%, #7c8780 48%, #35423d 100%);
+        linear-gradient(135deg, #17211d 0%, #26332e 46%, #101714 100%);
       background-attachment: fixed;
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
@@ -53,9 +53,11 @@
       position: fixed;
       inset: 0 0 auto 0;
       z-index: 50;
-      background: linear-gradient(90deg, rgba(39, 48, 44, 0.9), rgba(97, 108, 101, 0.68));
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(31, 39, 36, 0.58);
+      -webkit-backdrop-filter: blur(24px) saturate(1.45);
+      backdrop-filter: blur(24px) saturate(1.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 10px 30px -16px rgba(0, 0, 0, 0.55);
     }
     .nav-inner {
       width: min(1120px, calc(100% - 44px));
@@ -85,6 +87,7 @@
 
     .hero {
       position: relative;
+      z-index: 1;
       min-height: 100svh;
       display: flex;
       align-items: center;
@@ -92,7 +95,15 @@
       color: var(--light-text);
     }
     .hero .bg, .hero .veil { position: absolute; inset: 0; }
-    .hero .bg video { width: 100%; height: 100%; object-fit: cover; }
+    .hero .bg { background: #101714; }
+    .hero .bg .swarm-cursor-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
     .hero .veil {
       background:
         linear-gradient(180deg, rgba(27, 35, 31, 0.58) 0%, rgba(57, 68, 62, 0.28) 50%, rgba(24, 31, 28, 0.84) 100%),
@@ -233,6 +244,7 @@
 
     .gallery {
       position: relative;
+      z-index: 1;
       min-height: 100svh;
       display: flex;
       align-items: center;
@@ -243,15 +255,26 @@
     }
     .gallery--works {
       --tone: #c9b98f;
-      background: linear-gradient(135deg, rgba(36, 47, 42, 0.94) 0%, rgba(82, 96, 88, 0.7) 58%, rgba(57, 70, 64, 0.82) 100%);
+      background: transparent;
     }
     .gallery--three {
       --tone: #d2c5ad;
-      background: linear-gradient(135deg, rgba(57, 60, 55, 0.88) 0%, rgba(103, 105, 94, 0.64) 58%, rgba(121, 115, 102, 0.56) 100%);
+      background: transparent;
     }
     .gallery--cases {
       --tone: #c78e79;
-      background: linear-gradient(135deg, rgba(38, 44, 41, 0.94) 0%, rgba(91, 83, 78, 0.62) 58%, rgba(62, 68, 63, 0.84) 100%);
+      background: transparent;
+    }
+
+    .side-rays-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      mix-blend-mode: screen;
     }
     .gallery .section-head { max-width: 760px; margin-bottom: 32px; }
     .gallery .kicker { color: var(--tone); }
@@ -283,6 +306,8 @@
       background: var(--gallery-surface);
       border: 1px solid var(--gallery-line);
       border-radius: 8px;
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
     }
     .video-grid {
       display: grid;
@@ -310,9 +335,11 @@
       gap: 24px;
       align-items: stretch;
       padding: 22px;
-      background: linear-gradient(135deg, rgba(20, 27, 24, 0.58), rgba(255, 255, 255, 0.035));
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.26));
       border: 1px solid var(--gallery-line);
       border-radius: 8px;
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px);
     }
     .data-copy h3 { color: #f2f4f1; font-size: 24px; font-weight: 800; }
     .data-copy p {
@@ -407,7 +434,7 @@
       flex-direction: column;
       gap: 17px;
       padding: 24px;
-      background: rgba(255, 255, 255, 0.055);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.46), rgba(0, 0, 0, 0.24));
       border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 8px;
       backdrop-filter: blur(16px);
@@ -510,126 +537,190 @@
       .scroll-cue svg { animation: none; }
     }
 
-    @font-face {
-      font-family: "Noto Sans SC Local";
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url("assets/fonts/noto-400.ttf") format("truetype");
+    .gooey-nav {
+      position: relative;
+      display: inline-flex;
+      padding: 5px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(58, 70, 64, 0.62), rgba(28, 36, 32, 0.42));
+      border: 1px solid rgba(235, 240, 236, 0.16);
+      box-shadow: 0 16px 36px -18px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      backdrop-filter: blur(18px) saturate(1.35);
     }
-    @font-face {
-      font-family: "Noto Sans SC Local";
-      font-style: normal;
-      font-weight: 500;
-      font-display: swap;
-      src: url("assets/fonts/noto-500.ttf") format("truetype");
+    .gooey-nav-canvas {
+      position: absolute;
+      top: -44px;
+      left: -44px;
+      z-index: 1;
+      pointer-events: none;
     }
-    @font-face {
-      font-family: "Noto Sans SC Local";
-      font-style: normal;
-      font-weight: 600;
-      font-display: swap;
-      src: url("assets/fonts/noto-600.ttf") format("truetype");
+    .gooey-nav-hover,
+    .gooey-nav-pill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0;
+      border-radius: 999px;
+      pointer-events: none;
     }
-    @font-face {
-      font-family: "Noto Sans SC Local";
-      font-style: normal;
-      font-weight: 700;
-      font-display: swap;
-      src: url("assets/fonts/noto-700.ttf") format("truetype");
+    .gooey-nav-hover {
+      z-index: 2;
+      opacity: 0;
+      background: rgba(255, 255, 255, 0.07);
+      transition: left 0.22s ease, top 0.22s ease, width 0.22s ease, height 0.22s ease, opacity 0.18s ease;
     }
-    @font-face {
-      font-family: "Noto Sans SC Local";
-      font-style: normal;
-      font-weight: 800;
-      font-display: swap;
-      src: url("assets/fonts/noto-800.ttf") format("truetype");
+    .gooey-nav-pill {
+      z-index: 3;
+      width: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(234, 239, 236, 0.94));
+      box-shadow: 0 9px 22px -10px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+      transition: left 0.48s cubic-bezier(0.22, 1, 0.36, 1), top 0.34s ease, width 0.48s cubic-bezier(0.22, 1, 0.36, 1), height 0.34s ease, opacity 0.2s ease;
+      transform-origin: 50% 50%;
+      will-change: left, width, transform;
     }
-    @font-face {
-      font-family: "Noto Sans SC Local";
-      font-style: normal;
-      font-weight: 900;
-      font-display: swap;
-      src: url("assets/fonts/noto-900.ttf") format("truetype");
+    .gooey-nav-pill.is-moving { animation: gooey-wobble 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+    .gooey-nav-list {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .gooey-nav-link {
+      position: relative;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 15px;
+      border-radius: 999px;
+      color: #c5d0ca;
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.2;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+    .gooey-nav-link:hover { color: #fff; }
+    .gooey-nav-link.is-active { color: #1c2320; }
+    .gooey-nav-link:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 2px;
+    }
+    @keyframes gooey-wobble {
+      0% { transform: scale(0.86, 0.82); }
+      42% { transform: scale(1.055, 0.95); }
+      72% { transform: scale(0.985, 1.025); }
+      100% { transform: scale(1, 1); }
+    }
+    @media screen and (max-width: 700px) {
+      .gooey-nav-link { padding: 7px 11px; font-size: 12px; }
+    }
+    @media screen and (max-width: 620px) {
+      .gooey-nav { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .gooey-nav-pill,
+      .gooey-nav-hover { transition: none; }
+      .gooey-nav-pill.is-moving { animation: none; }
     }
 
-    .variable-proximity { white-space: nowrap; }
-    .variable-proximity .proximity-visual { display: inline; }
-    .variable-proximity .proximity-letter {
-      display: inline-block;
-      transform-origin: 50% 80%;
-      backface-visibility: hidden;
-      will-change: transform, color, font-weight;
+    .specular-module {
+      position: relative;
+      isolation: isolate;
+      --sx: 50%;
+      --sy: 50%;
     }
-    .hero h1.variable-proximity {
-      font-family: "Noto Sans SC Local", "Microsoft YaHei", sans-serif;
-      font-weight: 500;
-    }
-    .nav .brand-name.variable-proximity {
-      font-family: Georgia, "Times New Roman", serif;
-    }
-    .sr-only {
+    .specular-module::before,
+    .specular-module::after {
+      content: "";
       position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      mix-blend-mode: screen;
+      transition: opacity 0.22s ease;
+    }
+    .specular-module::before {
+      background: radial-gradient(260px at var(--sx) var(--sy), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 72%);
+    }
+    .specular-module::after {
+      background: radial-gradient(112px at var(--sx) var(--sy), rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 68%);
+    }
+    .specular-module:hover::before { opacity: 0.55; }
+    .specular-module:hover::after { opacity: 0.8; }
+    .specular-module > * { position: relative; z-index: 1; }
+
+    .reveal-module {
+      opacity: 0;
+      transform: translateY(28px) scale(0.985);
+      filter: blur(7px);
+      transition:
+        opacity 0.7s ease var(--reveal-delay, 0ms),
+        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+        filter 0.7s ease var(--reveal-delay, 0ms);
+      will-change: opacity, transform, filter;
+    }
+    .reveal-module.is-visible {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-module {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+      }
+    }
+
+    .gallery .wrap { position: relative; z-index: 1; }
+    .side-rays-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.55;
+      mix-blend-mode: screen;
     }
   </style>
 </head>
 <body>
   <div class="scroll-progress" aria-hidden="true"></div>
+  <canvas class="side-rays-layer" aria-hidden="true"></canvas>
   <nav class="nav">
     <div class="nav-inner">
       <a class="brand" href="#top" aria-label="Xiangsen Kong Portfolio">
-        <span
-          class="brand-name variable-proximity"
-          data-proximity
-          data-radius="92"
-          data-falloff="gaussian"
-          data-from-weight="700"
-          data-to-weight="700"
-          data-from-color="#f6f5ef"
-          data-to-color="#c9b98f"
-          data-scale="1.015"
-          data-lift="0.006"
-          data-smoothing="0.16"
-        >XIANGSEN KONG</span>
+        <span class="brand-name">XIANGSEN KONG</span>
         <span class="brand-sub">Portfolio</span>
       </a>
-      <div class="nav-links">
-        <a href="#works">大学阶段</a>
-        <a href="#three-d">三维实习</a>
-        <a href="#cases">IP 运营</a>
+      <div class="gooey-nav" id="gooey-nav" aria-label="作品集导航">
+        <canvas class="gooey-nav-canvas" aria-hidden="true"></canvas>
+        <span class="gooey-nav-hover" aria-hidden="true"></span>
+        <span class="gooey-nav-pill" aria-hidden="true"></span>
+        <div class="gooey-nav-list">
+          <a class="gooey-nav-link" href="#works" data-nav-index="0">大学阶段</a>
+          <a class="gooey-nav-link" href="#three-d" data-nav-index="1">三维实习</a>
+          <a class="gooey-nav-link" href="#cases" data-nav-index="2">IP 运营</a>
+        </div>
       </div>
     </div>
   </nav>
 
   <header class="hero" id="top">
     <div class="bg">
-      <video autoplay muted loop playsinline poster="assets/poster_v1.jpg">
-        <source src="videos/v1.mp4" type="video/mp4">
-      </video>
+      <canvas class="swarm-cursor-canvas" aria-hidden="true"></canvas>
     </div>
     <div class="veil"></div>
     <div class="hero-inner">
-      <h1
-        class="variable-proximity"
-        data-proximity
-        data-radius="170"
-        data-falloff="gaussian"
-        data-from-weight="500"
-        data-to-weight="900"
-        data-from-color="#f6f5ef"
-        data-to-color="#e6c98f"
-        data-scale="1.04"
-        data-lift="0.03"
-        data-smoothing="0.18"
-      >孔祥森</h1>
+      <h1>孔祥森</h1>
       <p class="target">求职意向：新媒体运营 / 短视频运营</p>
       <div class="hero-meta">
         <span>24 岁</span>
@@ -989,155 +1080,312 @@
   </script>
   <script>
     (() => {
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (reduceMotion.matches) return;
+      const nav = document.getElementById('gooey-nav');
+      if (!nav) return;
 
-      const nodes = Array.from(document.querySelectorAll('[data-proximity]'));
-      if (!nodes.length) return;
-
-      const parseColor = (value) => {
-        const hex = String(value || '#f6f5ef').replace('#', '');
-        if (hex.length !== 6) return [246, 245, 239];
-        return [0, 2, 4].map((index) => parseInt(hex.slice(index, index + 2), 16));
-      };
-      const mixColor = (from, to, amount) =>
-        `rgb(${from.map((channel, index) => Math.round(channel + (to[index] - channel) * amount)).join(', ')})`;
-      const strengthAt = (distance, radius, falloff) => {
-        if (distance >= radius) return 0;
-        const normalized = 1 - distance / radius;
-        if (falloff === 'exponential') return normalized * normalized;
-        if (falloff === 'gaussian') {
-          const edge = Math.exp(-2);
-          return (Math.exp(-2 * (distance / radius) ** 2) - edge) / (1 - edge);
-        }
-        return normalized;
-      };
-
-      const pointer = { x: 0, y: 0, active: false };
-      const states = nodes.map((element) => {
-        const text = element.textContent.trim();
-        const fromColor = parseColor(element.dataset.fromColor);
-        const toColor = parseColor(element.dataset.toColor);
-        const fromWeight = Number(element.dataset.fromWeight || 500);
-        const toWeight = Number(element.dataset.toWeight || 900);
-        const scale = Number(element.dataset.scale || 1);
-        const lift = Number(element.dataset.lift || 0);
-
-        element.textContent = '';
-        element.setAttribute('aria-label', text);
-        const sr = document.createElement('span');
-        sr.className = 'sr-only';
-        sr.textContent = text;
-        const visual = document.createElement('span');
-        visual.className = 'proximity-visual';
-        visual.setAttribute('aria-hidden', 'true');
-        const letters = Array.from(text).map((character) => {
-          const letter = document.createElement('span');
-          letter.className = 'proximity-letter';
-          letter.textContent = character === ' ' ? '\u00a0' : character;
-          letter.style.fontWeight = String(Math.round(fromWeight));
-          letter.style.color = mixColor(fromColor, toColor, 0);
-          visual.appendChild(letter);
-          return {
-            el: letter,
-            level: 0,
-            lastWeight: Math.round(fromWeight),
-            lastColor: mixColor(fromColor, toColor, 0),
-            lastTransform: ''
-          };
-        });
-        element.append(sr, visual);
-
-        return {
-          element,
-          letters,
-          radius: Number(element.dataset.radius || 150),
-          falloff: element.dataset.falloff || 'linear',
-          smoothing: Number(element.dataset.smoothing || 0.2),
-          fromWeight,
-          toWeight,
-          fromColor,
-          toColor,
-          scale,
-          lift
-        };
-      });
-
-      let frameId = 0;
+      const links = Array.from(nav.querySelectorAll('.gooey-nav-link'));
+      const sections = links.map((link) => document.querySelector(link.getAttribute('href')));
+      const pill = nav.querySelector('.gooey-nav-pill');
+      const hoverPill = nav.querySelector('.gooey-nav-hover');
+      const canvas = nav.querySelector('.gooey-nav-canvas');
+      const context = canvas.getContext('2d');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const pad = 44;
+      let activeIndex = 0;
+      let hoverIndex = -1;
+      let clickLockUntil = 0;
+      let particles = [];
+      let particleFrame = 0;
       let lastTime = 0;
+      let navSize = { width: 0, height: 0 };
 
-      const start = () => {
-        if (frameId) return;
-        lastTime = performance.now();
-        frameId = requestAnimationFrame(animate);
+      const ease = (value) => {
+        const t = Math.min(1, Math.max(0, value));
+        return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+      };
+      const bezier = (a, b, c, d, t) => {
+        const u = 1 - t;
+        return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;
+      };
+      const measureLink = (index) => {
+        const box = nav.getBoundingClientRect();
+        const rect = links[index].getBoundingClientRect();
+        return {
+          x: rect.left - box.left,
+          y: rect.top - box.top,
+          w: rect.width,
+          h: rect.height
+        };
       };
 
-      function animate(now) {
-        frameId = 0;
-        const delta = lastTime ? Math.min(now - lastTime, 64) : 16;
-        lastTime = now;
-        let active = false;
+      const resizeCanvas = () => {
+        const box = nav.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        navSize = { width: box.width, height: box.height };
+        canvas.width = Math.max(1, Math.round((box.width + pad * 2) * ratio));
+        canvas.height = Math.max(1, Math.round((box.height + pad * 2) * ratio));
+        canvas.style.width = `${box.width + pad * 2}px`;
+        canvas.style.height = `${box.height + pad * 2}px`;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        context.clearRect(0, 0, box.width + pad * 2, box.height + pad * 2);
+      };
 
-        states.forEach((state) => {
-          const area = state.element.getBoundingClientRect();
-          const outside =
-            !pointer.active ||
-            pointer.x < area.left - state.radius ||
-            pointer.x > area.right + state.radius ||
-            pointer.y < area.top - state.radius ||
-            pointer.y > area.bottom + state.radius;
-          const ease = 1 - Math.exp(-delta / (state.smoothing * 400));
-
-          state.letters.forEach((letter) => {
-            let target = 0;
-            if (!outside) {
-              const rect = letter.el.getBoundingClientRect();
-              const distance = Math.hypot(
-                pointer.x - (rect.left + rect.width / 2),
-                pointer.y - (rect.top + rect.height / 2)
-              );
-              target = strengthAt(distance, state.radius, state.falloff);
-            }
-            const previous = letter.level;
-            let next = previous + (target - previous) * ease;
-            if (Math.abs(target - next) < 0.002) next = target;
-            letter.level = next;
-            if (next > 0 || previous > 0) active = true;
-
-            const weight = Math.round(state.fromWeight + (state.toWeight - state.fromWeight) * next);
-            if (weight !== letter.lastWeight) {
-              letter.lastWeight = weight;
-              letter.el.style.fontWeight = String(weight);
-            }
-            const color = mixColor(state.fromColor, state.toColor, next);
-            if (color !== letter.lastColor) {
-              letter.lastColor = color;
-              letter.el.style.color = color;
-            }
-            const transform = `translateY(${(-state.lift * next).toFixed(3)}em) scale(${(1 + (state.scale - 1) * next).toFixed(3)})`;
-            if (transform !== letter.lastTransform) {
-              letter.lastTransform = transform;
-              letter.el.style.transform = transform;
-            }
-          });
+      const setActive = (index, animate = true) => {
+        if (index < 0 || index >= links.length) return;
+        const next = measureLink(index);
+        const previous = {
+          x: parseFloat(pill.style.left || '0'),
+          y: parseFloat(pill.style.top || '0'),
+          w: parseFloat(pill.style.width || '0'),
+          h: parseFloat(pill.style.height || '0')
+        };
+        activeIndex = index;
+        Object.assign(pill.style, {
+          left: `${next.x}px`,
+          top: `${next.y}px`,
+          width: `${next.w}px`,
+          height: `${next.h}px`
         });
+        links.forEach((link, itemIndex) => {
+          const isActive = itemIndex === index;
+          link.classList.toggle('is-active', isActive);
+          if (isActive) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+        if (animate && !reducedMotion.matches) {
+          pill.classList.remove('is-moving');
+          void pill.offsetWidth;
+          pill.classList.add('is-moving');
+          spawnParticles(previous, next);
+        }
+      };
 
-        if (active || pointer.active) start();
+      const setHover = (index) => {
+        if (index === activeIndex) {
+          hoverPill.style.opacity = '0';
+          return;
+        }
+        const rect = measureLink(index);
+        Object.assign(hoverPill.style, {
+          left: `${rect.x}px`,
+          top: `${rect.y}px`,
+          width: `${rect.w}px`,
+          height: `${rect.h}px`,
+          opacity: '1'
+        });
+        hoverIndex = index;
+      };
+
+      const clearHover = () => {
+        hoverIndex = -1;
+        hoverPill.style.opacity = '0';
+      };
+
+      function spawnParticles(from, to) {
+        if (!from.w || reducedMotion.matches) return;
+        const startX = from.x + from.w / 2 + pad;
+        const startY = from.y + from.h / 2 + pad;
+        const endX = to.x + to.w / 2 + pad;
+        const endY = to.y + to.h / 2 + pad;
+        const colors = ['rgba(255, 255, 255, 0.92)', 'rgba(234, 239, 236, 0.82)', 'rgba(255, 255, 255, 0.52)'];
+        const now = performance.now();
+        for (let index = 0; index < 15; index += 1) {
+          const angle = Math.random() * Math.PI * 2;
+          const burst = 18 + Math.random() * 46;
+          particles.push({
+            x0: startX,
+            y0: startY,
+            x1: endX + (Math.random() - 0.5) * 28,
+            y1: endY + (Math.random() - 0.5) * 12,
+            cx: (startX + endX) / 2 + Math.cos(angle) * burst,
+            cy: (startY + endY) / 2 + Math.sin(angle) * burst,
+            start: now + Math.random() * 100,
+            duration: 460 + Math.random() * 300,
+            radius: 2.4 + Math.random() * 4,
+            color: colors[index % colors.length]
+          });
+        }
+        if (!particleFrame) {
+          lastTime = now;
+          particleFrame = requestAnimationFrame(drawParticles);
+        }
       }
 
+      function drawParticles(now) {
+        particleFrame = 0;
+        const width = navSize.width + pad * 2;
+        const height = navSize.height + pad * 2;
+        context.clearRect(0, 0, width, height);
+        context.save();
+        context.globalCompositeOperation = 'lighter';
+        context.filter = 'blur(4px)';
+        particles = particles.filter((particle) => {
+          const progress = (now - particle.start) / particle.duration;
+          if (progress < 0) return true;
+          if (progress >= 1) return false;
+          const eased = ease(progress);
+          const x = bezier(particle.x0, particle.cx, particle.cx, particle.x1, eased);
+          const y = bezier(particle.y0, particle.cy, particle.cy, particle.y1, eased);
+          const radius = particle.radius * (0.75 + Math.sin(Math.PI * progress) * 1.15);
+          const gradient = context.createRadialGradient(x, y, 0, x, y, radius * 2.8);
+          gradient.addColorStop(0, particle.color);
+          gradient.addColorStop(1, 'rgba(230, 207, 156, 0)');
+          context.fillStyle = gradient;
+          context.beginPath();
+          context.arc(x, y, radius * 2.8, 0, Math.PI * 2);
+          context.fill();
+          return true;
+        });
+        context.restore();
+        if (particles.length) particleFrame = requestAnimationFrame(drawParticles);
+      }
+
+      const syncActiveFromScroll = () => {
+        if (performance.now() < clickLockUntil) return;
+        const marker = window.scrollY + window.innerHeight * 0.38;
+        let next = 0;
+        sections.forEach((section, index) => {
+          if (section && section.offsetTop <= marker) next = index;
+        });
+        if (next !== activeIndex) setActive(next, true);
+      };
+
+      links.forEach((link, index) => {
+        link.addEventListener('pointerenter', () => setHover(index));
+        link.addEventListener('focus', () => setHover(index));
+        link.addEventListener('pointerleave', clearHover);
+        link.addEventListener('blur', clearHover);
+        link.addEventListener('click', () => {
+          if (index === activeIndex) return;
+          clickLockUntil = performance.now() + 900;
+          setActive(index, true);
+        });
+      });
+      nav.addEventListener('pointerleave', clearHover);
+      window.addEventListener('scroll', syncActiveFromScroll, { passive: true });
+
+      const refresh = () => {
+        resizeCanvas();
+        setActive(activeIndex, false);
+        if (hoverIndex >= 0) setHover(hoverIndex);
+      };
+      window.addEventListener('resize', refresh);
+      if ('ResizeObserver' in window) new ResizeObserver(refresh).observe(nav);
+      document.fonts?.ready.then(refresh);
+      requestAnimationFrame(() => {
+        refresh();
+        syncActiveFromScroll();
+      });
+    })();
+  </script>
+  <script>
+    (() => {
+      const hero = document.querySelector('.hero');
+      const canvas = document.querySelector('.grid-rise-canvas');
+      if (!hero || !canvas) return;
+
+      const context = canvas.getContext('2d');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const pointer = { x: -9999, y: -9999 };
+      let width = 0;
+      let height = 0;
+      let ratio = 1;
+      let frameId = 0;
+      let visible = true;
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const mix = (from, to, amount) =>
+        from.map((channel, index) => channel + (to[index] - channel) * amount);
+      const rgb = (color) => `rgb(${color.map((channel) => Math.round(channel)).join(', ')})`;
+
+      function resize() {
+        const box = hero.getBoundingClientRect();
+        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = Math.max(1, box.width);
+        height = Math.max(1, box.height);
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      const palette = [[18, 27, 23], [25, 38, 33], [37, 52, 45]];
+      const highlight = [228, 210, 166];
+
+      function tileRect(x, y, size, radius) {
+        context.beginPath();
+        if (typeof context.roundRect === 'function') {
+          context.roundRect(x, y, size, size, radius);
+        } else {
+          context.rect(x, y, size, size);
+        }
+      }
+
+      function draw(now) {
+        if (!visible) {
+          frameId = 0;
+          return;
+        }
+        context.clearRect(0, 0, width, height);
+        context.fillStyle = '#101714';
+        context.fillRect(0, 0, width, height);
+
+        const time = now / 1000;
+        const gap = 2;
+        const size = width < 640 ? 25 : width < 1024 ? 34 : 42;
+        const stride = size + gap;
+        const columns = Math.ceil(width / stride) + 1;
+        const rows = Math.ceil(height / stride) + 1;
+
+        for (let row = 0; row < rows; row += 1) {
+          for (let column = 0; column < columns; column += 1) {
+            const x = column * stride;
+            const y0 = row * stride;
+            const centerX = x + size / 2;
+            const centerY = y0 + size / 2;
+            const distance = Math.hypot(centerX - pointer.x, centerY - pointer.y);
+            const proximity = distance < 190 ? 1 - distance / 190 : 0;
+            const ripple = Math.sin(distance * 0.045 - time * 5.2) * proximity;
+            const idle = (Math.sin((column + row) * 0.26 - time * 0.8) + 1) * 0.04;
+            const amount = clamp(proximity * 0.82 + ripple * 0.22 + idle, 0, 1);
+            const base = palette[(column + row) % palette.length];
+            const y = y0 - amount * size * 0.48;
+
+            context.fillStyle = rgb(mix(base, highlight, amount * 0.92));
+            tileRect(x, y, size, Math.min(6, size * 0.18));
+            context.fill();
+            if (amount > 0.12) {
+              context.strokeStyle = `rgba(255, 255, 255, ${(amount * 0.2).toFixed(3)})`;
+              context.lineWidth = 1;
+              context.stroke();
+            }
+          }
+        }
+        frameId = reducedMotion.matches ? 0 : requestAnimationFrame(draw);
+      }
+
+      const start = () => {
+        if (frameId || !visible || reducedMotion.matches) return;
+        frameId = requestAnimationFrame(draw);
+      };
+
       const setPointer = (event) => {
-        pointer.x = event.clientX;
-        pointer.y = event.clientY;
-        pointer.active = true;
+        const box = hero.getBoundingClientRect();
+        pointer.x = event.clientX - box.left;
+        pointer.y = event.clientY - box.top;
         start();
       };
       const clearPointer = () => {
-        pointer.active = false;
+        pointer.x = -9999;
+        pointer.y = -9999;
         start();
       };
 
+      resize();
+      draw(performance.now());
+      window.addEventListener('resize', resize);
       window.addEventListener('pointermove', setPointer, { passive: true });
-      window.addEventListener('mousemove', setPointer, { passive: true });
       window.addEventListener('touchmove', (event) => {
         const touch = event.touches[0];
         if (touch) setPointer({ clientX: touch.clientX, clientY: touch.clientY });
@@ -1146,10 +1394,1064 @@
       window.addEventListener('mouseleave', clearPointer);
       window.addEventListener('touchend', clearPointer, { passive: true });
       window.addEventListener('touchcancel', clearPointer, { passive: true });
-      window.addEventListener('scroll', () => {
-        if (pointer.active) start();
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          visible = entries.some((entry) => entry.isIntersecting);
+          if (visible) start();
+          else if (frameId) {
+            cancelAnimationFrame(frameId);
+            frameId = 0;
+          }
+        }).observe(hero);
+      }
+    })();
+  </script>
+  <script>
+    (() => {
+      const hero = document.querySelector('.hero');
+      const canvas = document.querySelector('.swarm-cursor-canvas');
+      if (!hero || !canvas) return;
+
+      const context = canvas.getContext('2d');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const spread = 90;
+      const baseColor = [0, 192, 254];
+      const accentColor = [107, 243, 253];
+      const pointer = { x: -9999, y: -9999, inside: false };
+      let width = 0;
+      let height = 0;
+      let ratio = 1;
+      let frameId = 0;
+      let lastTime = performance.now();
+      let time = 0;
+      let intro = 0;
+      let burstAge = 10;
+      let particles = [];
+      let visible = true;
+      let hovered = null;
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const mixColor = (from, to, amount) =>
+        from.map((channel, index) => channel + (to[index] - channel) * amount);
+
+      function resize() {
+        const box = hero.getBoundingClientRect();
+        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = Math.max(1, box.width);
+        height = Math.max(1, box.height);
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        if (!particles.length) seed();
+      }
+
+      function seed() {
+        const count = width < 640 ? 500 : 800;
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: 0,
+          vy: 0,
+          homeR: (0.16 + 0.84 * Math.sqrt(Math.random())) * spread,
+          homeA: Math.random() * Math.PI * 2,
+          heft: Math.random() * Math.random(),
+          bob: Math.random() * Math.PI * 2,
+          bobRate: 0.4 + Math.random() * 1.1,
+          grain: 0.6 + Math.random() * 0.8,
+          glint: Math.random() * 100
+        }));
+      }
+
+      function drawStatic() {
+        context.fillStyle = '#101714';
+        context.fillRect(0, 0, width, height);
+        particles.forEach((particle) => {
+          const radius = 2.2 * particle.grain;
+          context.fillStyle = 'rgba(0, 192, 254, 0.5)';
+          context.beginPath();
+          context.arc(particle.x, particle.y, radius, 0, Math.PI * 2);
+          context.fill();
+        });
+      }
+
+      function move(delta) {
+        const ease = intro < 1 ? intro * intro * (3 - 2 * intro) : 1;
+        const roamX = width * (0.5 + 0.3 * Math.sin(time * 0.21) + 0.06 * Math.sin(time * 0.53 + 1.7));
+        const roamY = height * (0.5 + 0.24 * Math.sin(time * 0.29 + 0.8) + 0.05 * Math.sin(time * 0.71));
+        const anchorX = pointer.inside ? pointer.x : roamX;
+        const anchorY = pointer.inside ? pointer.y : roamY;
+        hovered = pointer.inside ? findTarget() : null;
+
+        particles.forEach((particle) => {
+          const targetX = pointer.inside
+            ? pointer.x + Math.cos(particle.homeA + time * 0.18) * particle.homeR * (0.35 + 0.65 * ease)
+            : anchorX + Math.cos(particle.homeA + time * 0.12) * particle.homeR * 1.7;
+          const targetY = pointer.inside
+            ? pointer.y + Math.sin(particle.homeA + time * 0.18) * particle.homeR * (0.35 + 0.65 * ease)
+            : anchorY + Math.sin(particle.homeA + time * 0.12) * particle.homeR * 1.7;
+          const dx = targetX - particle.x;
+          const dy = targetY - particle.y;
+          const distance = Math.hypot(dx, dy) || 1;
+          let ax = dx * (pointer.inside ? 1.7 : 2.6);
+          let ay = dy * (pointer.inside ? 1.7 : 2.6);
+
+          if (pointer.inside) {
+            const proximity = clamp(1 - distance / (spread * 1.6), 0, 1);
+            const pull = 26 * proximity * (0.25 + particle.heft * 0.75) * ease;
+            const swirl = 2.5 * proximity * (0.4 + particle.grain * 0.6) * ease;
+            ax += (dx / distance) * pull;
+            ay += (dy / distance) * pull;
+            ax += (-dy / distance) * swirl;
+            ay += (dx / distance) * swirl;
+            if (distance < 16) {
+              const push = (16 - distance) * 3.2;
+              ax -= (dx / distance) * push;
+              ay -= (dy / distance) * push;
+            }
+          }
+
+          if (hovered) {
+            const rx = particle.x - hovered.x;
+            const ry = particle.y - hovered.y;
+            const radial = Math.hypot(rx, ry) || 1;
+            const qx = Math.max(Math.abs(rx) - (hovered.hx - hovered.corner), 0);
+            const qy = Math.max(Math.abs(ry) - (hovered.hy - hovered.corner), 0);
+            const field = Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - hovered.corner;
+            const pull = field < 0 ? 230 : field > 0 ? 78 : 0;
+            ax -= (rx / radial) * pull;
+            ay -= (ry / radial) * pull;
+            ax += (-ry / radial) * 150;
+            ay += (rx / radial) * 150;
+          }
+
+          const wander = Math.sin(time * particle.bobRate + particle.bob);
+          ax += Math.cos(wander) * 8;
+          ay += Math.sin(wander) * 8;
+          ax -= particle.vx * 2.1;
+          ay -= particle.vy * 2.1;
+          particle.vx += ax * delta;
+          particle.vy += ay * delta;
+          const speed = Math.hypot(particle.vx, particle.vy);
+          const maxSpeed = 560;
+          if (speed > maxSpeed) {
+            particle.vx *= maxSpeed / speed;
+            particle.vy *= maxSpeed / speed;
+          }
+          particle.x += particle.vx * delta;
+          particle.y += particle.vy * delta;
+          if (particle.x < -4) particle.x = width + 4;
+          else if (particle.x > width + 4) particle.x = -4;
+          if (particle.y < -4) particle.y = height + 4;
+          else if (particle.y > height + 4) particle.y = -4;
+        });
+      }
+
+      function findTarget() {
+        const heroBox = hero.getBoundingClientRect();
+        const element = document.elementFromPoint(heroBox.left + pointer.x, heroBox.top + pointer.y);
+        if (!element || !hero.contains(element)) return null;
+        const target = element.closest('a, button, [data-swarm-target]');
+        if (!target || !hero.contains(target)) return null;
+        const box = target.getBoundingClientRect();
+        const radius = Math.min(parseFloat(getComputedStyle(target).borderRadius) || 8, box.width / 2, box.height / 2);
+        return {
+          x: box.left - heroBox.left + box.width / 2,
+          y: box.top - heroBox.top + box.height / 2,
+          hx: box.width / 2,
+          hy: box.height / 2,
+          corner: radius
+        };
+      }
+
+      function draw(now) {
+        if (!visible) {
+          frameId = 0;
+          return;
+        }
+        context.fillStyle = 'rgba(16, 23, 20, 0.24)';
+        context.fillRect(0, 0, width, height);
+        const clickFlash = burstAge < 1.2 ? Math.exp(-burstAge / 0.28) : 0;
+
+        particles.forEach((particle) => {
+          const speed = Math.hypot(particle.vx, particle.vy);
+          const distance = pointer.inside ? Math.hypot(particle.x - pointer.x, particle.y - pointer.y) : 9999;
+          const near = pointer.inside ? clamp(1 - distance / spread, 0, 1) : 0;
+          const rush = clamp(speed / 620, 0, 1);
+          const tint = clamp(rush * 0.82 + clickFlash * 0.9 + near * 0.22, 0, 1);
+          const alpha = clamp(0.08 + rush * 0.22 + near * 0.3 + clickFlash * 0.18, 0.04, 0.9);
+          const radius = 2.2 * particle.grain * (1 + near * 0.34 + clickFlash * 0.25);
+          const color = mixColor(baseColor, accentColor, tint);
+
+          context.fillStyle = `rgba(${color.map((channel) => Math.round(channel)).join(', ')}, ${alpha.toFixed(3)})`;
+          context.beginPath();
+          context.arc(particle.x, particle.y, radius, 0, Math.PI * 2);
+          context.fill();
+
+          if (speed > 220) {
+            const length = Math.min(speed * 0.035, radius * 9);
+            const unitX = particle.vx / speed;
+            const unitY = particle.vy / speed;
+            context.strokeStyle = `rgba(${color.map((channel) => Math.round(channel)).join(', ')}, ${(alpha * 0.45).toFixed(3)})`;
+            context.lineWidth = radius * 0.8;
+            context.beginPath();
+            context.moveTo(particle.x, particle.y);
+            context.lineTo(particle.x - unitX * length, particle.y - unitY * length);
+            context.stroke();
+          }
+        });
+        frameId = reducedMotion.matches ? 0 : requestAnimationFrame(frame);
+      }
+
+      function frame(now) {
+        frameId = 0;
+        if (!visible || document.hidden) return;
+        const delta = clamp((now - lastTime) / 1000, 0.001, 1 / 30);
+        lastTime = now;
+        time += delta;
+        burstAge += delta;
+        intro = Math.min(1, intro + delta / 1.35);
+        move(delta);
+        draw(now);
+      }
+
+      const start = () => {
+        if (frameId || !visible || reducedMotion.matches) return;
+        frameId = requestAnimationFrame(frame);
+      };
+
+      const setPointer = (event) => {
+        const box = hero.getBoundingClientRect();
+        pointer.x = event.clientX - box.left;
+        pointer.y = event.clientY - box.top;
+        pointer.inside = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= box.width && pointer.y <= box.height;
+        start();
+      };
+      const clearPointer = () => {
+        pointer.inside = false;
+        start();
+      };
+      const click = (event) => {
+        if (!pointer.inside || reducedMotion.matches) return;
+        const box = hero.getBoundingClientRect();
+        const x = event.clientX - box.left;
+        const y = event.clientY - box.top;
+        burstAge = 0;
+        particles.forEach((particle) => {
+          const dx = particle.x - x;
+          const dy = particle.y - y;
+          const distance = Math.hypot(dx, dy) || 1;
+          if (distance > spread * 2.2) return;
+          const force = (1 - distance / (spread * 2.2)) * 860 * particle.grain;
+          particle.vx += (dx / distance) * force;
+          particle.vy += (dy / distance) * force;
+        });
+      };
+
+      resize();
+      if (reducedMotion.matches) {
+        drawStatic();
+      } else {
+        draw(performance.now());
+      }
+      window.addEventListener('resize', resize);
+      window.addEventListener('pointermove', setPointer, { passive: true });
+      window.addEventListener('touchmove', (event) => {
+        const touch = event.touches[0];
+        if (touch) setPointer({ clientX: touch.clientX, clientY: touch.clientY });
       }, { passive: true });
-      document.fonts?.ready.then(start);
+      window.addEventListener('pointerdown', click, { passive: true });
+      window.addEventListener('pointerleave', clearPointer);
+      window.addEventListener('mouseleave', clearPointer);
+      window.addEventListener('touchend', clearPointer, { passive: true });
+      window.addEventListener('touchcancel', clearPointer, { passive: true });
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          visible = entries.some((entry) => entry.isIntersecting);
+          if (visible) start();
+          else if (frameId) {
+            cancelAnimationFrame(frameId);
+            frameId = 0;
+          }
+        }).observe(hero);
+      }
+    })();
+  </script>
+  <script>
+    (() => {
+      const modules = document.querySelectorAll('.video-card, .account, .feature-note, .data-panel');
+      if (!modules.length) return;
+      modules.forEach((module) => {
+        module.classList.add('specular-module');
+        module.addEventListener('pointermove', (event) => {
+          const box = module.getBoundingClientRect();
+          module.style.setProperty('--sx', `${event.clientX - box.left}px`);
+          module.style.setProperty('--sy', `${event.clientY - box.top}px`);
+        });
+      });
+    })();
+  </script>
+  <script>
+    (() => {
+      const sections = [];
+      if (!sections.length) return;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const rayA = [230, 201, 143];
+      const rayB = [159, 184, 174];
+
+      sections.forEach((section, sectionIndex) => {
+        const canvas = document.createElement('canvas');
+        canvas.className = 'side-rays-canvas';
+        canvas.setAttribute('aria-hidden', 'true');
+        section.prepend(canvas);
+        const context = canvas.getContext('2d');
+        let width = 0;
+        let height = 0;
+        let ratio = 1;
+        let frameId = 0;
+        let lastTime = performance.now();
+        let time = sectionIndex * 2.3 + Math.random() * 40;
+        let visible = true;
+        const pointer = { x: -9999, y: -9999, inside: false };
+
+        const colorAt = (amount, alpha) => {
+          const color = [0, 1, 2].map((index) =>
+            Math.round(rayA[index] + (rayB[index] - rayA[index]) * amount)
+          );
+          return `rgba(${color.join(', ')}, ${alpha.toFixed(3)})`;
+        };
+
+        function resize() {
+          const box = section.getBoundingClientRect();
+          ratio = Math.min(window.devicePixelRatio || 1, 2);
+          width = Math.max(1, box.width);
+          height = Math.max(1, box.height);
+          canvas.width = Math.round(width * ratio);
+          canvas.height = Math.round(height * ratio);
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        }
+
+        function draw(now) {
+          if (!visible) {
+            frameId = 0;
+            return;
+          }
+          context.clearRect(0, 0, width, height);
+          const originX = width;
+          const originY = 0;
+          const targetAngle = pointer.inside
+            ? Math.atan2(pointer.y - originY, pointer.x - originX)
+            : Math.PI * 0.72;
+          const aim = (targetAngle - Math.PI * 0.72) * 0.22;
+          const rayCount = 12;
+
+          context.save();
+          context.globalCompositeOperation = 'lighter';
+          for (let index = 0; index < rayCount; index += 1) {
+            const ratioInFan = rayCount > 1 ? index / (rayCount - 1) : 0;
+            const sway = Math.sin(time * 0.7 + index * 1.7) * 0.018;
+            const angle = Math.PI * 0.72 + (ratioInFan - 0.5) * 0.9 + sway + aim;
+            const length = Math.hypot(width, height) * 1.35;
+            const dx = Math.cos(angle);
+            const dy = Math.sin(angle);
+            const endX = originX + dx * length;
+            const endY = originY + dy * length;
+            const sideX = -dy;
+            const sideY = dx;
+            const beamWidth = (0.018 + ratioInFan * 0.05 + 0.012 * Math.sin(time * 0.9 + index)) * length;
+            const shimmer = 0.58 + 0.42 * Math.sin(time * 1.25 + index * 1.3);
+            const colorMix = ratioInFan;
+            const gradient = context.createLinearGradient(originX, originY, endX, endY);
+            gradient.addColorStop(0, colorAt(colorMix, 0.16 * shimmer));
+            gradient.addColorStop(0.35, colorAt(colorMix, 0.1 * shimmer));
+            gradient.addColorStop(1, colorAt(colorMix, 0));
+            context.fillStyle = gradient;
+            context.beginPath();
+            context.moveTo(originX - sideX * beamWidth, originY - sideY * beamWidth);
+            context.lineTo(originX + sideX * beamWidth, originY + sideY * beamWidth);
+            context.lineTo(endX + sideX * beamWidth * 0.3, endY + sideY * beamWidth * 0.3);
+            context.lineTo(endX - sideX * beamWidth * 0.3, endY - sideY * beamWidth * 0.3);
+            context.closePath();
+            context.fill();
+          }
+
+          const glow = context.createRadialGradient(originX, originY, 0, originX, originY, height * 0.42);
+          glow.addColorStop(0, 'rgba(232, 214, 170, 0.22)');
+          glow.addColorStop(0.45, 'rgba(232, 214, 170, 0.08)');
+          glow.addColorStop(1, 'rgba(232, 214, 170, 0)');
+          context.fillStyle = glow;
+          context.fillRect(0, 0, width, height);
+          context.restore();
+          frameId = reducedMotion.matches ? 0 : requestAnimationFrame(frame);
+        }
+
+        function frame(now) {
+          frameId = 0;
+          if (!visible || document.hidden) return;
+          const delta = Math.min(0.05, (now - lastTime) / 1000 || 0);
+          lastTime = now;
+          time += delta * 2.2;
+          draw(now);
+        }
+
+        const start = () => {
+          if (frameId || !visible || reducedMotion.matches) return;
+          frameId = requestAnimationFrame(frame);
+        };
+
+        const setPointer = (event) => {
+          const box = section.getBoundingClientRect();
+          pointer.x = event.clientX - box.left;
+          pointer.y = event.clientY - box.top;
+          pointer.inside = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= box.width && pointer.y <= box.height;
+          start();
+        };
+        const clearPointer = () => {
+          pointer.inside = false;
+          start();
+        };
+
+        resize();
+        draw(performance.now());
+        window.addEventListener('resize', () => {
+          resize();
+          draw(performance.now());
+        });
+        window.addEventListener('pointermove', setPointer, { passive: true });
+        window.addEventListener('touchmove', (event) => {
+          const touch = event.touches[0];
+          if (touch) setPointer({ clientX: touch.clientX, clientY: touch.clientY });
+        }, { passive: true });
+        window.addEventListener('pointerleave', clearPointer);
+        window.addEventListener('mouseleave', clearPointer);
+        window.addEventListener('touchend', clearPointer, { passive: true });
+        window.addEventListener('touchcancel', clearPointer, { passive: true });
+
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver((entries) => {
+            visible = entries.some((entry) => entry.isIntersecting);
+            if (visible) start();
+            else if (frameId) {
+              cancelAnimationFrame(frameId);
+              frameId = 0;
+            }
+          }).observe(section);
+        }
+      });
+    })();
+  </script>
+  <script>
+    (() => {
+      const hero = document.querySelector('.hero');
+      const canvas = document.querySelector('.side-rays-layer');
+      if (!hero || !canvas) return;
+
+      const context = canvas.getContext('2d');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const rayA = [255, 196, 107];
+      const rayB = [150, 200, 255];
+      const pointer = { x: -9999, y: -9999, inside: false };
+      let width = 0;
+      let height = 0;
+      let ratio = 1;
+      let frameId = 0;
+      let running = false;
+      let lastTime = performance.now();
+      let time = Math.random() * 100;
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const colorAt = (amount, alpha) => {
+        const color = [0, 1, 2].map((index) =>
+          Math.round(rayA[index] + (rayB[index] - rayA[index]) * amount)
+        );
+        return `rgba(${color.join(', ')}, ${alpha.toFixed(3)})`;
+      };
+
+      function resize() {
+        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = Math.max(1, window.innerWidth);
+        height = Math.max(1, window.innerHeight);
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function layerAlpha() {
+        const heroBottom = hero.offsetTop + hero.offsetHeight;
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const scrollY = window.scrollY;
+        const fadeIn = clamp((scrollY - heroBottom + window.innerHeight * 0.18) / 320, 0, 1);
+        const fadeOut = clamp((maxScroll - scrollY + 140) / 320, 0, 1);
+        return Math.min(fadeIn, fadeOut) * 0.9;
+      }
+
+      function draw(now, alpha) {
+        context.clearRect(0, 0, width, height);
+        if (alpha <= 0.005) return;
+
+        const originX = width;
+        const originY = -height * 0.05;
+        const centerAngle = Math.PI * 0.74;
+        const aim = pointer.inside
+          ? (Math.atan2(pointer.y - originY, pointer.x - originX) - centerAngle) * 0.07
+          : 0;
+        const span = Math.hypot(width, height) * 1.5;
+        const shimmerTime = reducedMotion.matches ? 0 : time;
+
+        context.save();
+        context.globalAlpha = alpha;
+        context.globalCompositeOperation = 'screen';
+
+        context.filter = 'blur(16px)';
+        const broadRays = 46;
+        for (let index = 0; index < broadRays; index += 1) {
+          const position = broadRays > 1 ? index / (broadRays - 1) : 0;
+          const sway = Math.sin(shimmerTime * 0.72 + index * 1.7) * 0.014;
+          const angle = centerAngle + (position - 0.5) * 1.08 + sway + aim;
+          const dx = Math.cos(angle);
+          const dy = Math.sin(angle);
+          const endX = originX + dx * span;
+          const endY = originY + dy * span;
+          const sideX = -dy;
+          const sideY = dx;
+          const beam = (0.03 + position * 0.08 + 0.025 * Math.sin(shimmerTime * 0.9 + index)) * span;
+          const shimmer = 0.55 + 0.45 * Math.sin(shimmerTime * 1.15 + index * 1.3);
+          const gradient = context.createLinearGradient(originX, originY, endX, endY);
+          gradient.addColorStop(0, colorAt(position, 0.15 * shimmer));
+          gradient.addColorStop(0.35, colorAt(position, 0.08 * shimmer));
+          gradient.addColorStop(1, colorAt(position, 0));
+          context.fillStyle = gradient;
+          context.beginPath();
+          context.moveTo(originX - sideX * beam, originY - sideY * beam);
+          context.lineTo(originX + sideX * beam, originY + sideY * beam);
+          context.lineTo(endX + sideX * beam * 0.26, endY + sideY * beam * 0.26);
+          context.lineTo(endX - sideX * beam * 0.26, endY - sideY * beam * 0.26);
+          context.closePath();
+          context.fill();
+        }
+
+        context.filter = 'blur(4px)';
+        const fineRays = 30;
+        for (let index = 0; index < fineRays; index += 1) {
+          const position = fineRays > 1 ? index / (fineRays - 1) : 0;
+          const sway = Math.sin(shimmerTime * 0.61 + index * 2.2) * 0.018;
+          const angle = centerAngle + (position - 0.5) * 0.82 + sway + aim * 0.6;
+          const dx = Math.cos(angle);
+          const dy = Math.sin(angle);
+          const endX = originX + dx * span;
+          const endY = originY + dy * span;
+          const sideX = -dy;
+          const sideY = dx;
+          const beam = (0.003 + position * 0.012 + 0.006 * Math.sin(shimmerTime + index)) * span;
+          const gradient = context.createLinearGradient(originX, originY, endX, endY);
+          gradient.addColorStop(0, colorAt(position, 0.28));
+          gradient.addColorStop(0.5, colorAt(position, 0.1));
+          gradient.addColorStop(1, colorAt(position, 0));
+          context.fillStyle = gradient;
+          context.beginPath();
+          context.moveTo(originX - sideX * beam, originY - sideY * beam);
+          context.lineTo(originX + sideX * beam, originY + sideY * beam);
+          context.lineTo(endX + sideX * beam * 0.18, endY + sideY * beam * 0.18);
+          context.lineTo(endX - sideX * beam * 0.18, endY - sideY * beam * 0.18);
+          context.closePath();
+          context.fill();
+        }
+
+        context.filter = 'none';
+        const glow = context.createRadialGradient(originX, originY, 0, originX, originY, height * 0.48);
+        glow.addColorStop(0, 'rgba(255, 214, 140, 0.12)');
+        glow.addColorStop(0.4, 'rgba(255, 214, 140, 0.05)');
+        glow.addColorStop(1, 'rgba(255, 214, 140, 0)');
+        context.fillStyle = glow;
+        context.fillRect(0, 0, width, height);
+
+        const haze = context.createRadialGradient(width * 0.55, height * 0.08, 0, width * 0.55, height * 0.08, height * 0.92);
+        haze.addColorStop(0, 'rgba(255, 196, 107, 0.13)');
+        haze.addColorStop(0.42, 'rgba(150, 200, 255, 0.06)');
+        haze.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        context.fillStyle = haze;
+        context.fillRect(0, 0, width, height);
+
+        for (let dust = 0; dust < 110; dust += 1) {
+          const x = Math.abs(Math.sin(dust * 1.7 + time * 0.05)) * width;
+          const y = Math.abs(Math.sin(dust * 2.3 + time * 0.035)) * height;
+          const radius = 0.4 + Math.abs(Math.sin(dust * 3.1)) * 1.2;
+          const mix = Math.abs(Math.sin(dust * 0.7));
+          const alpha = 0.04 + 0.07 * Math.abs(Math.sin(time * 0.8 + dust));
+          context.fillStyle = colorAt(mix, alpha);
+          context.beginPath();
+          context.arc(x, y, radius, 0, Math.PI * 2);
+          context.fill();
+        }
+        context.restore();
+      }
+
+      function frame(now) {
+        frameId = 0;
+        if (!running || document.hidden) return;
+        const delta = Math.min(0.05, (now - lastTime) / 1000 || 0);
+        lastTime = now;
+        if (!reducedMotion.matches) time += delta * 1.5;
+        const alpha = layerAlpha();
+        if (alpha <= 0.005 && !pointer.inside) {
+          context.clearRect(0, 0, width, height);
+          running = false;
+          return;
+        }
+        draw(now, alpha);
+        frameId = requestAnimationFrame(frame);
+      }
+
+      const start = () => {
+        if (running || !canvas) return;
+        running = true;
+        lastTime = performance.now();
+        frameId = requestAnimationFrame(frame);
+      };
+      const setPointer = (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.inside = true;
+        start();
+      };
+      const clearPointer = () => {
+        pointer.inside = false;
+        start();
+      };
+
+      resize();
+      draw(performance.now(), layerAlpha());
+      window.addEventListener('resize', () => {
+        resize();
+        draw(performance.now(), layerAlpha());
+      });
+      window.addEventListener('scroll', start, { passive: true });
+      window.addEventListener('pointermove', setPointer, { passive: true });
+      window.addEventListener('touchmove', (event) => {
+        const touch = event.touches[0];
+        if (touch) setPointer({ clientX: touch.clientX, clientY: touch.clientY });
+      }, { passive: true });
+      window.addEventListener('pointerleave', clearPointer);
+      window.addEventListener('mouseleave', clearPointer);
+      window.addEventListener('touchend', clearPointer, { passive: true });
+      window.addEventListener('touchcancel', clearPointer, { passive: true });
+      start();
+    })();
+  </script>
+  <script>
+    (() => {
+      const hero = document.querySelector('.hero');
+      const canvas = document.querySelector('.side-rays-layer');
+      if (!hero || !canvas) return;
+
+      const gl = canvas.getContext('webgl2', {
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        powerPreference: 'high-performance',
+        preserveDrawingBuffer: true
+      });
+      if (!gl) return;
+
+      const VERTEX = `#version 300 es
+const vec2 corners[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
+void main() {
+  gl_Position = vec4(corners[gl_VertexID], 0.0, 1.0);
+}`;
+
+      const FRAGMENT = `#version 300 es
+precision highp float;
+uniform vec2 uResolution;
+uniform float uTime;
+uniform vec3 uColorA;
+uniform vec3 uColorB;
+uniform float uBlend;
+uniform float uIntensity;
+uniform float uSpread;
+uniform float uDensity;
+uniform float uSharpness;
+uniform float uFalloff;
+uniform float uGlow;
+uniform float uSaturation;
+uniform float uDust;
+uniform float uOpacity;
+uniform float uReveal;
+uniform float uLight;
+uniform vec3 uFrame;
+uniform float uAim;
+uniform vec3 uFocus;
+uniform float uSway;
+out vec4 fragColor;
+
+float hash(vec2 p) {
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = p - i;
+  vec2 w = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+  float a = hash(i);
+  float b = hash(i + vec2(1.0, 0.0));
+  float c = hash(i + vec2(0.0, 1.0));
+  float d = hash(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, w.x), mix(c, d, w.x), w.y);
+}
+
+float shafts(float u, float t, float seed, float aa) {
+  float sway = (0.4 * sin(t * 0.31 + seed) + 0.24 * sin(t * 0.17 + seed * 2.3)) * uSway;
+  float n = 0.7 * noise(vec2(u + sway + seed, t * 0.3)) + 0.3 * noise(vec2(u * 2.4 + sway * 1.5 + seed * 1.7, t * 0.45 + 3.0));
+  float width = mix(0.5, 0.1, uSharpness);
+  float s = mix(smoothstep(0.5 - width, 0.5 + width, n), 0.5, aa);
+  return mix(0.05, 1.0, s);
+}
+
+float motes(vec2 p, float cell, float t, float seed) {
+  p += vec2(t * 0.021, -t * 0.013) + seed * 7.31;
+  vec2 grid = p / cell;
+  vec2 id = floor(grid);
+  vec2 f = grid - id;
+  float h = hash(id + seed);
+  if (h > 0.5) return 0.0;
+  vec2 center = 0.25 + 0.5 * vec2(hash(id + 1.7 + seed), hash(id + 3.1 + seed));
+  center += 0.1 * vec2(sin(t * 0.7 + h * 31.0), cos(t * 0.6 + h * 23.0));
+  float size = mix(0.035, 0.09, hash(id + 5.3 + seed));
+  float edge = length(fwidth(grid)) * 0.7;
+  float twinkle = 0.55 + 0.45 * sin(t * 1.9 + h * 41.0);
+  return (1.0 - smoothstep(size - edge, size + edge, length(f - center))) * twinkle;
+}
+
+void main() {
+  float aspect = uResolution.x / uResolution.y;
+  vec2 q = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
+  if (uFrame.x > 0.5) q.x = -q.x;
+  if (uFrame.y > 0.5) q.y = -q.y;
+  vec2 source = uFrame.z > 0.5 ? vec2(aspect * 0.5 + 0.42, 0.3) : vec2(aspect * 0.5 + 0.1, 0.62);
+  float heading = (uFrame.z > 0.5 ? 3.42 : -2.48) + uAim + 0.035 * sin(uTime * 0.21) * uSway;
+  vec2 v = q - source;
+  float r = length(v);
+  float angle = mod(atan(v.y, v.x) - heading + 3.14159265, 6.28318531) - 3.14159265;
+  float t = uTime;
+  float u = angle * uDensity;
+  float aa = smoothstep(0.12, 0.45, fwidth(u));
+  float offset = uSpread * 0.22;
+  float fanA = exp(-pow((angle + offset) / uSpread, 2.0) * 1.4);
+  float fanB = exp(-pow((angle - offset) / (uSpread * 1.15), 2.0) * 1.4);
+  float focus = 1.0 + uFocus.z * exp(-pow((angle - uFocus.x) / uFocus.y, 2.0));
+  float lightA = fanA * shafts(u, t, 0.0, aa) * focus;
+  float lightB = fanB * shafts(u * 0.83, t * 0.6, 17.0, aa) * focus;
+  float reach = 1.0 / (1.0 + pow(r / 0.4, uFalloff));
+  vec3 glowColor = mix(uColorA, uColorB, uBlend);
+  vec3 light = (uColorA * lightA * (1.0 - uBlend) + uColorB * lightB * uBlend) * 2.0 * reach;
+  light += glowColor * uGlow * exp(-pow(r / 0.4, 2.0));
+  if (uDust > 0.0) {
+    float sparkle = motes(q, 0.06, t, 0.0) + 0.7 * motes(q, 0.038, t * 0.8, 9.0);
+    light += mix(glowColor, vec3(1.0), 0.6) * sparkle * (lightA + lightB) * reach * uDust * 2.5;
+  }
+  light *= uIntensity * (1.0 - smoothstep(uReveal * 2.6 - 0.45, uReveal * 2.6, r)) * smoothstep(0.0, 0.35, uReveal);
+  float gray = dot(light, vec3(0.2126, 0.7152, 0.0722));
+  light = max(mix(vec3(gray), light, uSaturation), 0.0);
+  float peak = max(light.r, max(light.g, light.b));
+  float grain = (fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) - 0.5) / 255.0;
+  float mapped = 1.0 - exp(-peak);
+  vec3 tone = light * (mapped / max(peak, 1e-4));
+  tone = mix(tone, vec3(mapped), smoothstep(0.7, 1.0, mapped) * 0.55);
+  vec3 shown = clamp(tone * uOpacity, 0.0, 1.0);
+  float alpha = max(shown.r, max(shown.g, shown.b));
+  vec3 color = clamp(shown * alpha + grain, 0.0, 1.0);
+  fragColor = vec4(min(color, vec3(alpha)), alpha);
+}`;
+
+      const UNIFORMS = [
+        'uResolution', 'uTime', 'uColorA', 'uColorB', 'uBlend', 'uIntensity',
+        'uSpread', 'uDensity', 'uSharpness', 'uFalloff', 'uGlow', 'uSaturation',
+        'uDust', 'uOpacity', 'uReveal', 'uLight', 'uFrame', 'uAim', 'uFocus', 'uSway'
+      ];
+      const compile = (type, source) => {
+        const shader = gl.createShader(type);
+        if (!shader) return null;
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      };
+      const vertexShader = compile(gl.VERTEX_SHADER, VERTEX);
+      const fragmentShader = compile(gl.FRAGMENT_SHADER, FRAGMENT);
+      const program = vertexShader && fragmentShader ? gl.createProgram() : null;
+      if (!program) {
+        canvas.dataset.raysError = 'compile';
+        return;
+      }
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      gl.deleteShader(vertexShader);
+      gl.deleteShader(fragmentShader);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        canvas.dataset.raysError = 'link';
+        return;
+      }
+      canvas.dataset.raysReady = '1';
+
+      const uniforms = {};
+      for (const name of UNIFORMS) uniforms[name] = gl.getUniformLocation(program, name);
+      canvas.dataset.uniformOpacity = uniforms.uOpacity ? '1' : '0';
+      canvas.dataset.uniformColorA = uniforms.uColorA ? '1' : '0';
+      canvas.dataset.uniformFrame = uniforms.uFrame ? '1' : '0';
+      const vao = gl.createVertexArray();
+      gl.bindVertexArray(vao);
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      gl.bindVertexArray(null);
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const wrapAngle = angle => ((((angle + Math.PI) % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2)) - Math.PI;
+      const parseColor = value => {
+        const text = String(value || '').trim();
+        const hex = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(text);
+        if (hex) {
+          const full = hex[1].length === 3 ? hex[1].replace(/./g, digit => digit + digit) : hex[1];
+          return [0, 2, 4].map(index => parseInt(full.slice(index, index + 2), 16) / 255);
+        }
+        return [1, 1, 1];
+      };
+      const frameOrigin = { flipX: 0, flipY: 0, side: 0 };
+      const settings = {
+        colorA: parseColor('#FFC46B'),
+        colorB: parseColor('#96c8ff'),
+        blend: 0.55,
+        speed: 1.2 * 0.4,
+        intensity: 1.35 * 0.75,
+        spread: clamp(2, 0.1, 8) * 0.225,
+        density: 5,
+        sharpness: 0.34,
+        falloff: 1.35,
+        glow: 1.15 * 1.2,
+        saturation: 1,
+        dust: 0.18,
+        followMouse: true,
+        mouseInfluence: 0.55,
+        intro: true,
+        light: false,
+        opacity: 0.95,
+        maxRatio: 2
+      };
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const pointer = { x: 0, y: 0, inside: false };
+      const aim = { value: 0, velocity: 0 };
+      const focus = { angle: 0, strength: 0 };
+      let width = 1;
+      let height = 1;
+      let ratio = 1;
+      let time = Math.random() * 100;
+      let reveal = settings.intro && !reducedMotion.matches ? 0 : 1;
+      let raf = 0;
+      let last = 0;
+      let visible = false;
+      let running = false;
+      let pageVisible = document.visibilityState !== 'hidden';
+
+      function layerAlpha() {
+        const heroBottom = hero.offsetTop + hero.offsetHeight;
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const scrollY = window.scrollY;
+        const fadeIn = clamp((scrollY - heroBottom + window.innerHeight * 0.18) / 320, 0, 1);
+        const fadeOut = clamp((maxScroll - scrollY + 140) / 320, 0, 1);
+        const computedAlpha = Math.min(fadeIn, fadeOut) * settings.opacity;
+        canvas.dataset.raysDebug = `${scrollY},${heroBottom},${maxScroll},${fadeIn.toFixed(2)},${fadeOut.toFixed(2)},${settings.opacity},${Math.min(fadeIn, fadeOut).toFixed(2)},${computedAlpha.toFixed(2)}`;
+        return computedAlpha;
+      }
+
+      function resize() {
+        ratio = Math.min(window.devicePixelRatio || 1, settings.maxRatio);
+        width = Math.max(1, window.innerWidth);
+        height = Math.max(1, window.innerHeight);
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+      }
+
+      function pointerAngle() {
+        let x = (pointer.x - width / 2) / height;
+        let y = (height / 2 - pointer.y) / height;
+        const aspect = width / height;
+        const source = [aspect * 0.5 + 0.1, 0.62];
+        const heading = -2.48;
+        return wrapAngle(Math.atan2(y - source[1], x - source[0]) - heading);
+      }
+
+      function frame(now) {
+        raf = 0;
+        canvas.dataset.raysFrameCount = String(Number(canvas.dataset.raysFrameCount || 0) + 1);
+        const currentAlpha = layerAlpha();
+        canvas.dataset.raysAlpha = currentAlpha.toFixed(2);
+        if (!visible || !pageVisible || document.hidden) return;
+        const dt = clamp((now - last) / 1000 || 0, 0, 0.05);
+        last = Math.max(last, now);
+        time += dt * settings.speed * (reducedMotion.matches ? 0.3 : 1);
+        if (reveal < 1) reveal = Math.min(1, reveal + dt / 1.6);
+
+        const tracking = settings.followMouse && pointer.inside && !reducedMotion.matches;
+        const pointed = tracking ? pointerAngle() : 0;
+        const target = tracking ? clamp(pointed, -settings.spread, settings.spread) * settings.mouseInfluence : 0;
+        const focusTarget = tracking ? settings.mouseInfluence : 0;
+        const ease = 1 - Math.exp(-dt * 6);
+        if (tracking) focus.angle += (clamp(pointed - aim.value, -settings.spread * 1.5, settings.spread * 1.5) - focus.angle) * ease;
+        focus.strength += (focusTarget - focus.strength) * ease;
+        const stiffness = 18;
+        const damping = 2 * Math.sqrt(stiffness);
+        aim.velocity += ((target - aim.value) * stiffness - aim.velocity * damping) * dt;
+        aim.value += aim.velocity * dt;
+
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.useProgram(program);
+        gl.bindVertexArray(vao);
+        gl.uniform2f(uniforms.uResolution, canvas.width, canvas.height);
+        gl.uniform1f(uniforms.uTime, time);
+        gl.uniform3f(uniforms.uColorA, settings.colorA[0], settings.colorA[1], settings.colorA[2]);
+        gl.uniform3f(uniforms.uColorB, settings.colorB[0], settings.colorB[1], settings.colorB[2]);
+        gl.uniform1f(uniforms.uBlend, settings.blend);
+        gl.uniform1f(uniforms.uIntensity, settings.intensity);
+        gl.uniform1f(uniforms.uSpread, settings.spread);
+        gl.uniform1f(uniforms.uDensity, settings.density);
+        gl.uniform1f(uniforms.uSharpness, settings.sharpness);
+        gl.uniform1f(uniforms.uFalloff, settings.falloff);
+        gl.uniform1f(uniforms.uGlow, settings.glow);
+        gl.uniform1f(uniforms.uSaturation, settings.saturation);
+        gl.uniform1f(uniforms.uDust, settings.dust);
+        gl.uniform1f(uniforms.uOpacity, layerAlpha());
+        gl.uniform1f(uniforms.uReveal, 1 - Math.pow(1 - reveal, 3));
+        gl.uniform1f(uniforms.uLight, settings.light ? 1 : 0);
+        gl.uniform3f(uniforms.uFrame, frameOrigin.flipX, frameOrigin.flipY, frameOrigin.side);
+        gl.uniform1f(uniforms.uAim, aim.value);
+        gl.uniform3f(uniforms.uFocus, focus.angle, Math.max(0.06, settings.spread * 0.25), focus.strength * 1.4);
+        gl.uniform1f(uniforms.uSway, reducedMotion.matches ? 0 : 1);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        canvas.dataset.raysDrawn = '1';
+        const probe = new Uint8Array(4);
+        let probeSum = 0;
+        for (let px = 0; px < 24; px += 1) {
+          const sx = Math.floor((canvas.width - 2) * (px / 24));
+          const sy = Math.max(0, canvas.height - 14);
+          gl.readPixels(sx, sy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, probe);
+          probeSum += probe[3];
+        }
+        canvas.dataset.raysPixel = String(probeSum);
+        gl.bindVertexArray(null);
+
+        const alpha = layerAlpha();
+        const settling = Math.abs(target - aim.value) > 1e-4 || Math.abs(aim.velocity) > 1e-4 || Math.abs(focusTarget - focus.strength) > 1e-3;
+        const busy = (settings.speed > 0 && !reducedMotion.matches) || reveal < 1 || settling;
+        if (busy && alpha > 0.005) {
+          raf = requestAnimationFrame(frame);
+        } else if (alpha > 0.005 || pointer.inside) {
+          raf = requestAnimationFrame(frame);
+        } else {
+          running = false;
+          gl.clearColor(0, 0, 0, 0);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+      }
+
+      const wake = () => {
+        if (running || !visible || !pageVisible) return;
+        running = true;
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      };
+      const setPointer = event => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.inside = true;
+        visible = true;
+        wake();
+      };
+      const clearPointer = () => {
+        pointer.inside = false;
+        wake();
+      };
+      const refresh = () => {
+        resize();
+        visible = layerAlpha() > 0.005;
+        if (visible) wake();
+      };
+
+      resize();
+      window.addEventListener('resize', refresh);
+      window.addEventListener('scroll', refresh, { passive: true });
+      window.addEventListener('pointermove', setPointer, { passive: true });
+      window.addEventListener('touchmove', event => {
+        const touch = event.touches[0];
+        if (touch) setPointer({ clientX: touch.clientX, clientY: touch.clientY });
+      }, { passive: true });
+      window.addEventListener('pointerleave', clearPointer);
+      window.addEventListener('mouseleave', clearPointer);
+      window.addEventListener('touchend', clearPointer, { passive: true });
+      window.addEventListener('touchcancel', clearPointer, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        pageVisible = document.visibilityState !== 'hidden';
+        if (pageVisible) refresh();
+      });
+      refresh();
+    })();
+  </script>
+  <script>
+    (() => {
+      const modules = Array.from(document.querySelectorAll('.video-card, .account, .feature-note, .data-panel'));
+      if (!modules.length) return;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      modules.forEach((module) => {
+        module.classList.add('reveal-module');
+        const siblings = Array.from(module.parentElement.children).filter((item) => modules.includes(item));
+        const index = Math.max(0, siblings.indexOf(module));
+        module.style.setProperty('--reveal-delay', `${Math.min(index * 80, 320)}ms`);
+      });
+
+      const showAll = () => {
+        modules.forEach((module) => module.classList.add('is-visible'));
+      };
+      if (reducedMotion.matches || !('IntersectionObserver' in window)) {
+        showAll();
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      }, {
+        threshold: 0.14,
+        rootMargin: '0px 0px -7% 0px'
+      });
+      modules.forEach((module) => observer.observe(module));
+
+      window.addEventListener('load', () => {
+        modules.forEach((module) => {
+          const box = module.getBoundingClientRect();
+          if (box.top < window.innerHeight * 0.92 && box.bottom > 0) module.classList.add('is-visible');
+        });
+      }, { once: true });
     })();
   </script>
 </body>
